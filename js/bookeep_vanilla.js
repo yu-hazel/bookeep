@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
+    console.log('js 로드 완료');
     let books = [];
 
     // 페이지 로드 시 저장된 책 정보를 불러오기
@@ -30,53 +31,53 @@ document.addEventListener('DOMContentLoaded', function () {
             method: "GET",
             headers: { Authorization: "KakaoAK bb155ac85c80a7efdc2647ef682e4fb0" }
         })
-        .then(response => response.json())
-        .then(data => {
-            let results = document.getElementById('results');
-            results.innerHTML = '';
-            books = data.documents;
-            console.log(books);
+            .then(response => response.json())
+            .then(data => {
+                let results = document.getElementById('results');
+                results.innerHTML = '';
+                books = data.documents;
+                console.log(books);
 
-            if (books.length > 0) {
-                books.forEach(function (book, index) {
-                    let thumbnail = book.thumbnail === "" ? "<div class='placeholder'></div>" : `<img src='${book.thumbnail}' alt='${book.title}'/>`;
-                    let bookHtml = `<div class='book' data-index='${index}'>
+                if (books.length > 0) {
+                    books.forEach(function (book, index) {
+                        let thumbnail = book.thumbnail === "" ? "<div class='placeholder'></div>" : `<img src='${book.thumbnail}' alt='${book.title}'/>`;
+                        let bookHtml = `<div class='book' data-index='${index}'>
                                         <p class="bookTitle">${book.title}</p>
                                         ${thumbnail}
                                     </div>`;
-                    results.insertAdjacentHTML('beforeend', bookHtml);
-                });
-
-                document.querySelectorAll('.book').forEach(function (bookElement) {
-                    bookElement.addEventListener('click', function () {
-                        let index = this.dataset.index;
-                        let book = books[index];
-
-                        document.getElementById('modalTitle').textContent = book.title;
-                        document.getElementById('modalImage').setAttribute('src', book.thumbnail);
-                        document.getElementById('modalAuthor').textContent = `저자 : ${book.authors.join(", ")}`;
-                        document.getElementById('modalIsbn').textContent = `ISBN : ${book.isbn}`;
-                        document.getElementById('modalPrice').textContent = `가격 : ${book.price}`;
-                        document.getElementById('modalPages').value = "";
-                        document.getElementById('modalComment').value = "";
-                        document.getElementById('modalCategory').value = "wantToRead";
-
-                        document.getElementById('bookModal').style.display = 'block';
-
-                        document.getElementById('saveButton').onclick = function () {
-                            saveBook(book);
-                        };
+                        results.insertAdjacentHTML('beforeend', bookHtml);
                     });
-                });
-            } else {
-                results.insertAdjacentHTML('beforeend', "<p>검색 결과가 없습니다.</p>");
-            }
-        })
-        .catch(() => {
-            let results = document.getElementById('results');
-            results.innerHTML = '';
-            results.insertAdjacentHTML('beforeend', "<p>API 호출에 실패했습니다.</p>");
-        });
+
+                    document.querySelectorAll('.book').forEach(function (bookElement) {
+                        bookElement.addEventListener('click', function () {
+                            let index = this.dataset.index;
+                            let book = books[index];
+
+                            document.getElementById('modalTitle').textContent = book.title;
+                            document.getElementById('modalImage').setAttribute('src', book.thumbnail);
+                            document.getElementById('modalAuthor').textContent = `저자 : ${book.authors.join(", ")}`;
+                            document.getElementById('modalIsbn').textContent = `ISBN : ${book.isbn}`;
+                            document.getElementById('modalPrice').textContent = `가격 : ${book.price}`;
+                            document.getElementById('modalPages').value = "";
+                            document.getElementById('modalComment').value = "";
+                            document.getElementById('modalCategory').value = "wantToRead";
+
+                            document.getElementById('bookModal').style.display = 'block';
+
+                            document.getElementById('saveButton').onclick = function () {
+                                saveBook(book);
+                            };
+                        });
+                    });
+                } else {
+                    results.insertAdjacentHTML('beforeend', "<p>검색 결과가 없습니다.</p>");
+                }
+            })
+            .catch(() => {
+                let results = document.getElementById('results');
+                results.innerHTML = '';
+                results.insertAdjacentHTML('beforeend', "<p>API 호출에 실패했습니다.</p>");
+            });
     }
 
     // 책 저장하기
@@ -90,6 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
         let pages = document.getElementById('modalPages').value;
         let comment = document.getElementById('modalComment').value;
         let category = document.getElementById('modalCategory').value;
+
+        console.log('Pages:', pages);
 
         let bookData = {
             title: book.title,
@@ -132,6 +135,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // 책의 두께를 결정하는 함수
+    function getBookThickness(pages) {
+        let thickness = Math.min(Math.max((pages / 10) * 5, 30), 170);
+        console.log('Calculated thickness:', thickness); // 두께를 콘솔에 출력
+        return `${thickness}px`;
+        // 페이지수에 따라 두께 px로 설정, 10페이지마다 10px, 최소 30px 
+    }
+
     // 저장한 책 보여주기
     function displaySavedBooks() {
         let savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
@@ -146,7 +157,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (savedBooks.wantToRead.length > 0 || savedBooks.reading.length > 0 || savedBooks.finished.length > 0) {
             savedBooks.wantToRead.forEach(function (book, index) {
-                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='wantToRead'>
+                let thickness = getBookThickness(book.pages);
+                // 책 두께 결정하는 부분
+                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='wantToRead' title='${book.title}' style='width: ${thickness};'>
                                     <p class="bookTitle">${book.title}</p>
                                     ${book.thumbnail ? `<img src='${book.thumbnail}' alt='${book.title}'/>` : "<div class='placeholder'></div>"}
                                 </div>`;
@@ -154,7 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             savedBooks.reading.forEach(function (book, index) {
-                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='reading'>
+                let thickness = getBookThickness(book.pages);
+                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='reading' title='${book.title}' style='width: ${thickness};'>
                                     <p class="bookTitle">${book.title}</p>
                                     ${book.thumbnail ? `<img src='${book.thumbnail}' alt='${book.title}'/>` : "<div class='placeholder'></div>"}
                                 </div>`;
@@ -162,7 +176,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             savedBooks.finished.forEach(function (book, index) {
-                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='finished'>
+                let thickness = getBookThickness(book.pages);
+                let bookHtml = `<div class='savedBook' data-index='${index}' data-category='finished' title='${book.title}' style='width: ${thickness};'>
                                     <p class="bookTitle">${book.title}</p>
                                     ${book.thumbnail ? `<img src='${book.thumbnail}' alt='${book.title}'/>` : "<div class='placeholder'></div>"}
                                 </div>`;
@@ -222,34 +237,34 @@ document.addEventListener('DOMContentLoaded', function () {
                     document.getElementById('editButton').style.display = 'none';
                     document.getElementById('saveEditButton').style.display = 'block';
 
-                document.getElementById('saveEditButton').onclick = function () {
-                    let pages = document.getElementById('editModalPages').value;
-                    let comment = document.getElementById('editModalComment').value;
-                    let newCategory = document.getElementById('editModalCategory').value;
-                    let book = savedBooks[category].splice(index, 1)[0]; // 기존 카테고리에서 책을 제거
-                    book.pages = pages;
-                    book.comment = comment;
-                    savedBooks[newCategory].push(book); // 새로운 카테고리에 책을 추가
-                    localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
-                    alert('책이 수정되었습니다.');
+                    document.getElementById('saveEditButton').onclick = function () {
+                        let pages = document.getElementById('editModalPages').value;
+                        let comment = document.getElementById('editModalComment').value;
+                        let newCategory = document.getElementById('editModalCategory').value;
+                        let book = savedBooks[category].splice(index, 1)[0]; // 기존 카테고리에서 책을 제거
+                        book.pages = pages;
+                        book.comment = comment;
+                        savedBooks[newCategory].push(book); // 새로운 카테고리에 책을 추가
+                        localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
+                        alert('책이 수정되었습니다.');
 
-                    // 바로 반영하기 위해 데이터 업데이트
-                    document.getElementById('savedModalPages').textContent = pages;
-                    document.getElementById('savedModalComment').textContent = comment;
-                    document.getElementById('savedModalCategory').textContent = `현재 저장 위치 : ${getCategoryName(newCategory)}`;
+                        // 바로 반영하기 위해 데이터 업데이트
+                        document.getElementById('savedModalPages').textContent = pages;
+                        document.getElementById('savedModalComment').textContent = comment;
+                        document.getElementById('savedModalCategory').textContent = `현재 저장 위치 : ${getCategoryName(newCategory)}`;
 
-                    // 모달창을 닫지 않음으로써 수정된 내용을 즉시 확인할 수 있게 함
-                    document.getElementById('editModalPages').style.display = 'none';
-                    document.getElementById('editModalComment').style.display = 'none';
-                    document.getElementById('savedModalPages').style.display = 'block';
-                    document.getElementById('savedModalComment').style.display = 'block';
-                    document.getElementById('editModalCategory').style.display = 'none';
-                    document.getElementById('deleteButton').style.display = 'block';
-                    document.getElementById('editButton').style.display = 'block';
-                    document.getElementById('saveEditButton').style.display = 'none';
+                        // 모달창을 닫지 않음으로써 수정된 내용을 즉시 확인할 수 있게 함
+                        document.getElementById('editModalPages').style.display = 'none';
+                        document.getElementById('editModalComment').style.display = 'none';
+                        document.getElementById('savedModalPages').style.display = 'block';
+                        document.getElementById('savedModalComment').style.display = 'block';
+                        document.getElementById('editModalCategory').style.display = 'none';
+                        document.getElementById('deleteButton').style.display = 'block';
+                        document.getElementById('editButton').style.display = 'block';
+                        document.getElementById('saveEditButton').style.display = 'none';
 
-                    displaySavedBooks();
-                };
+                        displaySavedBooks();
+                    };
                 };
             });
         });
@@ -270,8 +285,8 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // 카테고리에 따라 저장된 위치 보여주기
-function getCategoryName(category){
-    switch(category) {
+function getCategoryName(category) {
+    switch (category) {
         case 'wantToRead':
             return '읽고 싶은 책';
         case 'reading':
@@ -286,8 +301,8 @@ function getCategoryName(category){
 // 탭 클릭 이벤트 설정
 let tabLinks = document.querySelectorAll('.tablinks');
 if (tabLinks.length > 0) {
-    tabLinks.forEach(function(tabLink) {
-        tabLink.addEventListener('click', function(evt) {
+    tabLinks.forEach(function (tabLink) {
+        tabLink.addEventListener('click', function (evt) {
             openTab(evt, tabLink.getAttribute('data-tab'));
         });
     });
