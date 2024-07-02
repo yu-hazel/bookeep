@@ -18,12 +18,14 @@ document.addEventListener('DOMContentLoaded', function () {
         searchBooks();
     });
 
+    // 엔터 칠 때도 검색
     document.getElementById('bookQuery').addEventListener('keyup', function (event) {
         if (event.key === "Enter") {
             searchBooks();
         }
     });
 
+    // 카카오 api 이용하여 책 찾기
     function searchBooks() {
         let query = document.getElementById('bookQuery').value;
 
@@ -60,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             document.getElementById('modalPrice').textContent = `가격 : ${book.price}`;
                             document.getElementById('modalPages').value = "";
                             document.getElementById('modalComment').value = "";
-                            document.getElementById('modalCategory').value = "wantToRead";
+                            document.getElementById('modalCategory').value = "wantToRead"; // 카테고리는 기본으로 '읽고 싶은 책'으로 설정함
 
                             document.getElementById('bookModal').style.display = 'block';
 
@@ -80,7 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
     }
 
-    // 책 저장하기
+    // 로컬 스토리지에 책 저장하기 (각 카테고리에)
     function saveBook(book) {
         let savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
             wantToRead: [],
