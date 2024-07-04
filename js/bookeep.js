@@ -23,56 +23,56 @@ $(document).ready(function () {
             data: { query: query },
             headers: { Authorization: "KakaoAK bb155ac85c80a7efdc2647ef682e4fb0" }
         })
-        .done(function (msg) {
-            $('#results').empty();
-            books = msg.documents;
-            console.log(books);
+            .done(function (msg) {
+                $('#results').empty();
+                books = msg.documents;
+                console.log(books);
 
-            if (books.length > 0) {
-                books.forEach(function (book, index) {
-                    let thumbnail = book.thumbnail === "" ? "<div class='placeholder'></div>" : `<img src='${book.thumbnail}' alt='${book.title}'/>`;
-                    let bookHtml = `<div class='book' data-index='${index}'>
+                if (books.length > 0) {
+                    books.forEach(function (book, index) {
+                        let thumbnail = book.thumbnail === "" ? "<div class='placeholder'></div>" : `<img src='${book.thumbnail}' alt='${book.title}'/>`;
+                        let bookHtml = `<div class='book' data-index='${index}'>
                                         <p class="bookTitle">${book.title}</p>
                                         ${thumbnail}
                                     </div>`;
-                    $('#results').append(bookHtml);
-                });
-
-                // 책을 클릭했을 때 모달을 띄우는 이벤트 핸들러
-                $('.book').click(function () {
-                    let index = $(this).data('index');
-                    let book = books[index];
-
-                    $('#modalTitle').text(book.title);
-                    $('#modalImage').attr('src', book.thumbnail);
-                    $('#modalAuthor').text(`저자 : ${book.authors.join(", ")}`);
-                    $('#modalIsbn').text(`ISBN : ${book.isbn}`);
-                    $('#modalPrice').text(`가격 : ${book.price}`);
-                    $('#modalPages').val("");
-                    $('#modalComment').val("");
-                    $('#modalCategory').val("wantToRead");
-
-                    $('#bookModal').css('display', 'block');
-
-                    $('#saveButton').off('click').on('click', function () {
-                        saveBook(book);
+                        $('#results').append(bookHtml);
                     });
-                });
-            } else {
-                $('#results').append("<p>검색 결과가 없습니다.</p>");
-            }
-        })
-        .fail(function () {
-            $('#results').empty();
-            $('#results').append("<p>API 호출에 실패했습니다.</p>");
-        });
+
+                    // 책을 클릭했을 때 모달을 띄우는 이벤트 핸들러
+                    $('.book').click(function () {
+                        let index = $(this).data('index');
+                        let book = books[index];
+
+                        $('#modalTitle').text(book.title);
+                        $('#modalImage').attr('src', book.thumbnail);
+                        $('#modalAuthor').text(`저자 : ${book.authors.join(", ")}`);
+                        $('#modalIsbn').text(`ISBN : ${book.isbn}`);
+                        $('#modalPrice').text(`가격 : ${book.price}`);
+                        $('#modalPages').val("");
+                        $('#modalComment').val("");
+                        $('#modalCategory').val("wantToRead");
+
+                        $('#bookModal').css('display', 'block');
+
+                        $('#saveButton').off('click').on('click', function () {
+                            saveBook(book);
+                        });
+                    });
+                } else {
+                    $('#results').append("<p>검색 결과가 없습니다.</p>");
+                }
+            })
+            .fail(function () {
+                $('#results').empty();
+                $('#results').append("<p>API 호출에 실패했습니다.</p>");
+            });
     }
 
     // 책 정보를 로컬 스토리지에 저장하는 함수
     function saveBook(book) {
         // 로컬 스토리지에서 savedBooks를 가져오고, 없는 경우 초기화
         let savedBooks = JSON.parse(localStorage.getItem('savedBooks'));
-        
+
         // savedBooks가 없거나 구조가 잘못된 경우 초기화
         if (!savedBooks || typeof savedBooks !== 'object' || !savedBooks.wantToRead || !savedBooks.reading || !savedBooks.finished) {
             savedBooks = {
@@ -81,11 +81,11 @@ $(document).ready(function () {
                 finished: []
             };
         }
-    
+
         let pages = $('#modalPages').val();
         let comment = $('#modalComment').val();
         let category = $('#modalCategory').val();
-    
+
         let bookData = {
             title: book.title,
             thumbnail: book.thumbnail,
@@ -94,7 +94,7 @@ $(document).ready(function () {
             pages: pages,
             comment: comment
         };
-    
+
         // 모든 카테고리에서 중복 검사
         let bookExists = Object.keys(savedBooks).some(cat => {
             return savedBooks[cat].some(savedBook => savedBook.isbn === book.isbn);
@@ -115,7 +115,7 @@ $(document).ready(function () {
     // 모달 닫기
     $('.close').click(function () {
         $('#bookModal').css('display', 'none');
-        $('#savedBookModal').css('display', 'none'); 
+        $('#savedBookModal').css('display', 'none');
     });
 
     // 모달 밖을 클릭했을 때 닫기
@@ -136,19 +136,19 @@ $(document).ready(function () {
             reading: [],
             finished: []
         };
-    
-    // savedBooks가 없거나 구조가 잘못된 경우 초기화
-    if (!savedBooks || typeof savedBooks !== 'object' || !savedBooks.wantToRead || !savedBooks.reading || !savedBooks.finished) {
-        savedBooks = {
-            wantToRead: [],
-            reading: [],
-            finished: []
-        };
-    }
+
+        // savedBooks가 없거나 구조가 잘못된 경우 초기화
+        if (!savedBooks || typeof savedBooks !== 'object' || !savedBooks.wantToRead || !savedBooks.reading || !savedBooks.finished) {
+            savedBooks = {
+                wantToRead: [],
+                reading: [],
+                finished: []
+            };
+        }
         let wantToReadHtml = '';
         let readingHtml = '';
         let finishedHtml = '';
-    
+
         if (savedBooks.wantToRead.length > 0 || savedBooks.reading.length > 0 || savedBooks.finished.length > 0) {
             savedBooks.wantToRead.forEach(function (book, index) {
                 let bookHtml = `<div class='savedBook' data-index='${index}' data-category='wantToRead'>
@@ -157,7 +157,7 @@ $(document).ready(function () {
                                 </div>`;
                 wantToReadHtml += bookHtml;
             });
-        
+
             savedBooks.reading.forEach(function (book, index) {
                 let bookHtml = `<div class='savedBook' data-index='${index}' data-category='reading'>
                                     <p class="bookTitle">${book.title}</p>
@@ -165,7 +165,7 @@ $(document).ready(function () {
                                 </div>`;
                 readingHtml += bookHtml;
             });
-        
+
             savedBooks.finished.forEach(function (book, index) {
                 let bookHtml = `<div class='savedBook' data-index='${index}' data-category='finished'>
                                     <p class="bookTitle">${book.title}</p>
@@ -178,17 +178,17 @@ $(document).ready(function () {
             readingHtml = "<p>저장된 책이 없습니다.</p>";
             finishedHtml = "<p>저장된 책이 없습니다.</p>";
         }
-    
+
         $('#wantToReadTab').html(wantToReadHtml);
         $('#readingTab').html(readingHtml);
         $('#finishedTab').html(finishedHtml);
-    
+
         // 저장된 책 클릭 이벤트 핸들러
         $('.savedBook').click(function () {
             let index = $(this).data('index');
             let category = $(this).data('category');
             let book = savedBooks[category][index];
-    
+
             $('#savedModalTitle').text(book.title);
             $('#savedModalImage').attr('src', book.thumbnail);
             $('#savedModalAuthor').text(`저자 : ${book.authors.join(", ")}`);
@@ -201,13 +201,13 @@ $(document).ready(function () {
             $('#deleteButton').show();
             $('#editButton').show();
             $('#saveEditButton').hide();
-    
+
             $('#savedBookModal').css('display', 'block');
-    
+
             $('#deleteButton').off('click').on('click', function () {
                 deleteBook(index, category);
             });
-    
+
             $('#editButton').off('click').on('click', function () {
                 $('#savedModalPages').hide();
                 $('#savedModalComment').hide();
@@ -216,7 +216,7 @@ $(document).ready(function () {
                 $('#deleteButton').hide();
                 $('#editButton').hide();
                 $('#saveEditButton').show();
-    
+
                 $('#saveEditButton').off('click').on('click', function () {
                     let pages = $('#editModalPages').val();
                     let comment = $('#editModalComment').val();
@@ -227,11 +227,11 @@ $(document).ready(function () {
                     savedBooks[newCategory].push(book); // 새로운 카테고리에 책을 추가
                     localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
                     alert('책이 수정되었습니다.');
-    
+
                     // 바로 반영하기 위해 데이터 업데이트
                     $('#savedModalPages').text(pages);
                     $('#savedModalComment').text(comment);
-    
+
                     // 모달창을 닫지 않음으로써 수정된 내용을 즉시 확인할 수 있게 함
                     $('#editModalPages').hide();
                     $('#editModalComment').hide();
@@ -240,7 +240,7 @@ $(document).ready(function () {
                     $('#deleteButton').show();
                     $('#editButton').show();
                     $('#saveEditButton').hide();
-    
+
                     displaySavedBooks();
                 });
             });
@@ -265,20 +265,20 @@ $(document).ready(function () {
         displaySavedBooks();
     });
 });
-    // 초기 설정: 첫 번째 탭 열기
-    document.getElementsByClassName("tablinks")[0].click();
+// 초기 설정: 첫 번째 탭 열기
+document.getElementsByClassName("tablinks")[0].click();
 
-    // 탭 열기
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tabName).style.display = "flex";
-        evt.currentTarget.className += " active";
+// 탭 열기
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
     }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "flex";
+    evt.currentTarget.className += " active";
+}
