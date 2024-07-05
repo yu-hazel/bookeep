@@ -17,7 +17,7 @@
           <v-card-subtitle>
             {{ book.authors.length ? book.authors.join(", ") + " 작가님" : "작가 정보 없음" }}
           </v-card-subtitle>
-          <v-card-title class="bookTitle">{{ book.title }}</v-card-title>
+          <v-card-title class="bookTitle"><strong>{{ book.title }}</strong></v-card-title>
         </v-card>
       </v-col>
     </v-row>

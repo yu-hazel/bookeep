@@ -1,27 +1,20 @@
 <!-- src/App.vue -->
 <template>
   <v-app>
-    <v-container>
-      <SearchBook />
-      <BookTabs />
-    </v-container>
+    <NavBar />
+    <v-main>
+      <router-view />
+    </v-main>
   </v-app>
 </template>
 
-<script setup>
-import SearchBook from './components/SearchBook.vue';
-import BookTabs from './components/BookTabs.vue';
-</script>
-
-<!-- <script>
-import SearchBook from './components/SearchBook.vue';
-import BookTabs from './components/BookTabs.vue';
+<script>
+import NavBar from './components/NavBar.vue';
 
 export default {
   name: 'App',
   components: {
-    SearchBook,
-    BookTabs,
-  }
+    NavBar,
+  },
 };
-</script> -->
+</script>

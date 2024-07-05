@@ -27,8 +27,8 @@
             <!-- <v-radio-group v-model="rating" row>
               <v-radio v-for="star in 5" :key="star" :label="`${star}점`" :value="star"></v-radio>
             </v-radio-group> -->
-            <v-rating v-model="rating" background-color="yellow" color="yellow darken-2" dense length="5"
-              half-increments clearable></v-rating>
+            <v-rating v-model="rating" background-color="purple" color="deep-purple-lighten-3" density="compact"
+              length="5" half-increments clearable></v-rating>
           </div>
 
           <v-select v-model="selectedCategory" :items="categories" label="카테고리 선택" dense class="mt-4"

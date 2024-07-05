@@ -9,12 +9,14 @@
                     <v-card-text>
                         <!-- <p>페이지: {{ book.pages }}</p> -->
                         <!-- <p>코멘트: {{ book.comment }}</p> -->
-                        <v-rating :model-value="book.rating" background-color="yellow" color="yellow darken-2" dense
-                            length="5" half-increments readonly></v-rating>
-                        <p>{{ book.authors.join(", ") }}</p>
+                        <v-rating :model-value="book.rating" density="compact" background-color="purple"
+                            color="deep-purple-lighten-3" length="5" half-increments readonly
+                            v-if="props.category !== '읽고 싶은 책'"></v-rating>
+                        <p>{{ book.authors?.join(", ") || '작가 정보 없음' }}</p>
                         <!-- 작가명이 영어로 되어 있는 경우, Herman Hesse 작가님.. 으로 나와서 '작가님' 은 빼기로! -->
                         <p><strong>{{ book.title }}</strong></p>
-                        <p>{{ book.startDate }} | {{ book.endDate }}</p>
+                        <p v-if="props.category === '읽는 중인 책'">{{ book.startDate }} ~</p>
+                        <p v-if="props.category === '다 읽은 책'">{{ book.startDate }} ~ {{ book.endDate }}</p>
                         <!-- <p>종료일: {{ book.endDate }}</p> -->
                     </v-card-text>
                 </v-card>
