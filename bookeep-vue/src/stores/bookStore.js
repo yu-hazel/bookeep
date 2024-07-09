@@ -30,6 +30,7 @@ export const useBookStore = defineStore('bookStore', () => {
 
     const setUser = (userData) => {
         user.value = userData;
+        isLoggedIn.value = !!userData;
         if (userData) {
             loadBooks();
         }
