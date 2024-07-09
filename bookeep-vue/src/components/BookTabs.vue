@@ -8,6 +8,9 @@
         </div>
         <v-tabs-items v-model="activeTab">
             <v-tab-item>
+                <SearchSavedBook />
+            </v-tab-item>
+            <v-tab-item>
                 <BookList :category="categories[activeTab]" />
             </v-tab-item>
         </v-tabs-items>
@@ -15,37 +18,39 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import BookList from './BookList.vue';
+import SearchSavedBook from './SearchSavedBook.vue';
+import { useBookStore } from '@/stores/bookStore';
+
+const bookStore = useBookStore();
 
 const activeTab = ref(0);
 const categories = ['읽고 싶은 책', '읽는 중인 책', '다 읽은 책'];
 
-const getBookCounts = () => {
-    const savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
-        wantToRead: [],
-        reading: [],
-        finished: []
-    };
-
+const bookCounts = computed(() => {
+    const books = bookStore.books;
     return {
-        '읽고 싶은 책': savedBooks.wantToRead.length,
-        '읽는 중인 책': savedBooks.reading.length,
-        '다 읽은 책': savedBooks.finished.length
+        '읽고 싶은 책': books?.wantToRead?.length || 0,
+        '읽는 중인 책': books?.reading?.length || 0,
+        '다 읽은 책': books?.finished?.length || 0
     };
-};
-
-const bookCounts = ref(getBookCounts());
+});
 
 const activeCategoryBookCount = computed(() => {
     const category = categories[activeTab.value];
     return bookCounts.value[category];
 });
 
+onMounted(() => {
+    bookStore.loadBooks();
+});
+
 watch(activeTab, () => {
-    bookCounts.value = getBookCounts();
+    bookStore.loadBooks();
 });
 </script>
+
 <style scoped>
 .tabs {
     display: flex;

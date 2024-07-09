@@ -11,11 +11,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import BookTabs from '../components/BookTabs.vue';
-import BookShelf from '../components/BookShelf.vue';
+import { computed, onMounted } from 'vue';
+import { useUserStore } from '@/stores/userStore';
+import { useBookStore } from '@/stores/bookStore';
+import BookShelf from '@/components/BookShelf.vue';
+import BookTabs from '@/components/BookTabs.vue';
 
-const userName = ref('유혜인');
+const userStore = useUserStore();
+const bookStore = useBookStore();
+const userName = computed(() => userStore.userName);
+const books = computed(() => bookStore.books);
+
+onMounted(() => {
+    bookStore.loadBooks();
+});
 </script>
 
 <!-- <script>

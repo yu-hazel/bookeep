@@ -1,7 +1,17 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { createClient } from '@supabase/supabase-js';
+
+// const supabaseUrl = '/supabase';
+const supabaseUrl = 'https://vovzpunshmcodmkletaw.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZvdnpwdW5zaG1jb2Rta2xldGF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTgxMDg5MzUsImV4cCI6MjAzMzY4NDkzNX0.aVXi_AbLx-AGNwWVa0MB-WiNrkht2Eq0ECnBwDds2Kc';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export const useBookStore = defineStore('bookStore', () => {
+    const router = useRouter();
+    const isLoggedIn = ref(false); // 로그인 상태
+
     const query = ref('');
     const books = ref([]);
     const selectedBook = ref(null);
@@ -14,12 +24,22 @@ export const useBookStore = defineStore('bookStore', () => {
     const startDate = ref('');
     const endDate = ref('');
     const rating = ref(0);
+    const readingPage = ref('');
+
+    const user = ref(null);
+
+    const setUser = (userData) => {
+        user.value = userData;
+        if (userData) {
+            loadBooks();
+        }
+    };
+
+    // const isLoggedIn = computed(() => user.value !== null);
 
     const selectedSavedBook = ref(null);
     const showSavedBookModal = ref(false);
     const selectedSavedBookCategory = ref('');
-
-    const readingPage = ref('');
 
     const searchBooks = async () => {
         if (query.value.trim() === '') {
@@ -65,45 +85,94 @@ export const useBookStore = defineStore('bookStore', () => {
         query.value = newQuery;
     };
 
-    const saveBook = () => {
-        const categoryKeyMap = {
-            '읽고 싶은 책': 'wantToRead',
-            '읽는 중인 책': 'reading',
-            '다 읽은 책': 'finished',
-        };
+    const saveBook = async () => {
+        // if (!user.value) {
+        //     console.error('사용자가 로그인되어 있지 않습니다.');
+        //     return;
+        // }
 
-        let savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
-            wantToRead: [],
-            reading: [],
-            finished: []
-        };
-
-        const bookData = {
-            title: selectedBook.value.title,
-            thumbnail: selectedBook.value.thumbnail,
-            authors: selectedBook.value.authors,
-            isbn: selectedBook.value.isbn,
-            pages: pages.value,
-            readingPage: readingPage.value,
-            comment: comment.value,
-            startDate: startDate.value,
-            endDate: endDate.value,
-            rating: rating.value,
-        };
-
-        const bookExists = Object.keys(savedBooks).some(cat => {
-            return savedBooks[cat].some(savedBook => savedBook.isbn === bookData.isbn);
-        });
-
-        if (!bookExists) {
-            savedBooks[categoryKeyMap[selectedCategory.value]].push(bookData);
-            localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
-            alert('책이 저장되었습니다.');
-        } else {
-            alert('이미 저장된 책입니다.');
+        if (!isLoggedIn.value) {
+            router.push('/BeforeLogin'); // 로그인 페이지로 리디렉션
+            return;
         }
 
-        closeModal();
+        const bookData = {
+            user_id: user.value.id,
+            title: selectedBook.value.title,
+            thumbnail: selectedBook.value.thumbnail,
+            authors: JSON.stringify(selectedBook.value.authors),
+            isbn: selectedBook.value.isbn,
+            pages: pages.value,
+            reading_page: readingPage.value,
+            comment: comment.value,
+            start_date: startDate.value === '' ? null : startDate.value,
+            end_date: endDate.value === '' ? null : endDate.value,
+            rating: rating.value,
+            category: selectedCategory.value
+        };
+
+        console.log('Saving book data:', bookData); // 요청 데이터 로그 추가
+
+        try {
+            const { data, error } = await supabase
+                .from('books')
+                .insert([bookData]);
+
+            if (error) {
+                console.error('Supabase error:', error); // Supabase 에러 로그 추가
+                throw error;
+            }
+
+            alert('책이 저장되었습니다.');
+            loadBooks();
+            closeModal();
+        } catch (error) {
+            console.error('Error saving book:', error);
+            alert('책 저장에 실패했습니다.');
+        }
+    };
+
+    const loadBooks = async () => {
+        if (!user.value) return;
+        try {
+            const { data, error } = await supabase
+                .from('books')
+                .select('*')
+                .eq('user_id', user.value.id);
+
+            if (error) {
+                throw error;
+            }
+
+            // console.log('Fetched books:', data); // 데이터 콘솔에 출력
+
+            const categorizedBooks = {
+                wantToRead: [],
+                reading: [],
+                finished: [],
+                all: [] // 전체 책 목록 추가
+            };
+
+            data.forEach(book => {  
+                try {
+                    book.authors = JSON.parse(book.authors); // authors를 JSON 형식으로 파싱
+                } catch (e) {
+                    book.authors = []; // 파싱 실패 시 빈 배열로 설정
+                }
+                if (book.category === '읽고 싶은 책') {
+                    categorizedBooks.wantToRead.push(book);
+                } else if (book.category === '읽는 중인 책') {
+                    categorizedBooks.reading.push(book);
+                } else if (book.category === '다 읽은 책') {
+                    categorizedBooks.finished.push(book);
+                }
+                categorizedBooks.all.push(book);  // 모든 책을 추가
+            });
+
+            books.value = categorizedBooks;
+        } catch (error) {
+            console.error('Error loading books:', error);
+        }
     };
 
     const selectSavedBook = (book, category) => {
@@ -112,7 +181,7 @@ export const useBookStore = defineStore('bookStore', () => {
         selectedSavedBookCategory.value = category;
 
         if (category === '읽는 중인 책') {
-            readingPage.value = book.readingPage || '';
+            readingPage.value = book.reading_page || '';
         }
     };
 
@@ -121,52 +190,58 @@ export const useBookStore = defineStore('bookStore', () => {
         selectedSavedBookCategory.value = '';
     };
 
-    const updateSavedBook = (updatedBook, newCategory) => {
-        const savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
-            wantToRead: [],
-            reading: [],
-            finished: []
-        };
+    const updateSavedBook = async (updatedBook, newCategory) => {
+        try {
+            const { data, error } = await supabase
+                .from('books')
+                .upsert({
+                    id: updatedBook.id,
+                    user_id: user.value.id,
+                    title: updatedBook.title,
+                    thumbnail: updatedBook.thumbnail,
+                    authors: JSON.stringify(updatedBook.authors),
+                    isbn: updatedBook.isbn,
+                    pages: updatedBook.pages,
+                    reading_page: updatedBook.reading_page,
+                    comment: updatedBook.comment,
+                    start_date: updatedBook.start_date === '' ? null : updatedBook.start_date,
+                    end_date: updatedBook.end_date === '' ? null : updatedBook.end_date,
+                    rating: updatedBook.rating,
+                    category: newCategory
+                })
+                .select();
 
-        const oldCategoryKey = {
-            '읽고 싶은 책': 'wantToRead',
-            '읽는 중인 책': 'reading',
-            '다 읽은 책': 'finished'
-        }[selectedSavedBookCategory.value];
+            if (error) {
+                throw error;
+            }
 
-        const newCategoryKey = {
-            '읽고 싶은 책': 'wantToRead',
-            '읽는 중인 책': 'reading',
-            '다 읽은 책': 'finished'
-        }[newCategory];
-
-        // 기존 카테고리에서 책 제거
-        savedBooks[oldCategoryKey] = savedBooks[oldCategoryKey].filter(book => book.isbn !== updatedBook.isbn);
-
-        // 새로운 카테고리에 책 추가
-        savedBooks[newCategoryKey].push(updatedBook);
-
-        localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
-        selectedSavedBookCategory.value = newCategory; // 카테고리 업데이트
+            alert('책이 업데이트되었습니다.');
+            await loadBooks();
+            closeSavedBookModal();
+        } catch (error) {
+            console.error('Error updating book:', error);
+            alert('책 업데이트에 실패했습니다.');
+        }
     };
 
-    const deleteSavedBook = (isbn, category) => {
-        const savedBooks = JSON.parse(localStorage.getItem('savedBooks')) || {
-            wantToRead: [],
-            reading: [],
-            finished: []
-        };
+    const deleteSavedBook = async (bookId) => {
+        try {
+            const { error } = await supabase
+                .from('books')
+                .delete()
+                .eq('id', bookId);
 
-        const categoryKey = {
-            '읽고 싶은 책': 'wantToRead',
-            '읽는 중인 책': 'reading',
-            '다 읽은 책': 'finished'
-        }[category];
+            if (error) {
+                throw error;
+            }
 
-        // 해당 카테고리에서 책 제거
-        savedBooks[categoryKey] = savedBooks[categoryKey].filter(book => book.isbn !== isbn);
-
-        localStorage.setItem('savedBooks', JSON.stringify(savedBooks));
+            alert('책이 삭제되었습니다.');
+            loadBooks();
+            closeSavedBookModal();
+        } catch (error) {
+            console.error('Error deleting book:', error);
+            alert('책 삭제에 실패했습니다.');
+        }
     };
 
     return {
@@ -187,12 +262,15 @@ export const useBookStore = defineStore('bookStore', () => {
         closeModal,
         setQuery,
         saveBook,
+        setUser,
         selectedSavedBook,
         showSavedBookModal,
         selectedSavedBookCategory,
         selectSavedBook,
         closeSavedBookModal,
         updateSavedBook,
-        deleteSavedBook
+        deleteSavedBook,
+        loadBooks,
+        isLoggedIn,
     };
 });
