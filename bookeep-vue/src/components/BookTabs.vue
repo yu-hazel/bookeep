@@ -1,8 +1,8 @@
 <template>
-    <v-container>
+    <v-container class="myBook">
         <div class="tabs">
-            <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2">
-                <v-tab v-for="(category, index) in categories" :key="index">{{ category }}</v-tab>
+            <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2" class="menuBox">
+                <v-tab v-for="(category, index) in categories" :key="index" class="menu">{{ category }}</v-tab>
             </v-tabs>
             <p>{{ activeCategoryBookCount }}권의 책 저장중</p>
         </div>
@@ -26,7 +26,7 @@ import { useBookStore } from '@/stores/bookStore';
 const bookStore = useBookStore();
 
 const activeTab = ref(0);
-const categories = ['읽고 싶은 책', '읽는 중인 책', '다 읽은 책'];
+const categories = ['다 읽은 책', '읽는 중인 책', '읽고 싶은 책'];
 
 const bookCounts = computed(() => {
     const books = bookStore.books;
@@ -55,5 +55,12 @@ watch(activeTab, () => {
 .tabs {
     display: flex;
     justify-content: space-between;
+}
+.myBook {
+    padding: 0;
+}
+.menu {
+    font-size: 16px;
+    padding: 0 5px;
 }
 </style>
