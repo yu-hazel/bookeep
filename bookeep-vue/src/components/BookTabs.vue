@@ -1,8 +1,8 @@
 <template>
-    <v-container>
+    <v-container class="myBook">
         <div class="tabs">
-            <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2">
-                <v-tab v-for="(category, index) in categories" :key="index">{{ category }}</v-tab>
+            <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2" class="menuBox">
+                <v-tab v-for="(category, index) in categories" :key="index" class="menu">{{ category }}</v-tab>
             </v-tabs>
             <p>{{ activeCategoryBookCount }}권의 책 저장중</p>
         </div>
@@ -55,5 +55,12 @@ watch(activeTab, () => {
 .tabs {
     display: flex;
     justify-content: space-between;
+}
+.myBook {
+    padding: 0;
+}
+.menu {
+    font-size: 16px;
+    padding: 0 5px;
 }
 </style>

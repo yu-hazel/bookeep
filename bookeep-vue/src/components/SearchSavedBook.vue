@@ -1,7 +1,7 @@
 <template>
-    <v-container>
-        <v-text-field v-model="searchQuery" label="책 이름 또는 저자명으로 검색" dense clearable
-            @input="searchBooks"></v-text-field>
+    <v-container class="searchBox">
+        <v-text-field v-model="searchQuery" label="책 이름 또는 저자명으로 검색" dense clearable @input="searchBooks"
+            class="searchBox"></v-text-field>
         <v-row v-if="filteredBooks.length">
             <v-col xs="12" sm="6" md="4" lg="3" v-for="book in filteredBooks" :key="book.id">
                 <v-card @click="openBookDetail(book)">
@@ -54,3 +54,12 @@ const openBookDetail = (book) => {
     bookStore.selectSavedBook(book, book.category);
 };
 </script>
+
+<style scoped>
+.searchBox {
+    width: 100%;
+}
+.searchBox {
+    padding: 0;
+}
+</style>
