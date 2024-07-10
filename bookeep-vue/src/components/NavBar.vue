@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer app permanent>
+    <v-navigation-drawer app permanent style="width: 240px;">
         <!-- parmanent 속성으로 항상 내비게이션 바 고정 -->
         <v-list>
             <v-list-item>
@@ -7,34 +7,39 @@
                     <v-list-item-title class="headline">Bookeep</v-list-item-title>
                     <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" />
                     <div class="userSubTitle">
-                        <p v-if="isLoggedIn">안녕하세요, {{ userName }}님!</p>
-                        <p v-else>로그인 해주세요</p>
+                        <div v-if="isLoggedIn" class="userName">
+                            <span>안녕하세요, </span>
+                            <span>{{ userName }}님!</span>
+                        </div>
+                        <div v-else>
+                            <span>로그인 해주세요</span>
+                        </div>
                         <p v-if="isLoggedIn">행복을 읽는 유저</p>
                     </div>
                 </v-list-item-content>
             </v-list-item>
 
-            <v-divider></v-divider>
+            <!-- <v-divider></v-divider> -->
 
-            <v-list-item link>
+            <v-list-item link style="padding: 0;">
                 <router-link to="/">
                     <v-list-item-title>나의 책장</v-list-item-title>
                 </router-link>
             </v-list-item>
 
-            <v-list-item link>
+            <v-list-item link style="padding: 0;">
                 <router-link to="/ReadingStatistics">
                     <v-list-item-title>나의 독서통계</v-list-item-title>
                 </router-link>
             </v-list-item>
 
-            <v-list-item link>
+            <v-list-item link style="padding: 0;">
                 <router-link to="/SearchBooks">
-                    <v-list-item-title>검색하기</v-list-item-title>
+                    <v-list-item-title class="navMenu">검색하기</v-list-item-title>
                 </router-link>
             </v-list-item>
 
-            <v-list-item link @click="isLoggedIn ? signOut() : signIn()">
+            <v-list-item link @click="isLoggedIn ? signOut() : signIn()" style="padding: 0;">
                 <v-list-item-title>{{ isLoggedIn ? '로그아웃' : '로그인' }}</v-list-item-title>
             </v-list-item>
         </v-list>
@@ -93,6 +98,7 @@ const checkLoginStatus = async () => {
 onMounted(() => {
     checkLoginStatus();
 });
+
 </script>
 
 <!-- <script>
@@ -126,11 +132,22 @@ v-list-item-content {
     align-items: center;
     gap: 5px;
 }
-.userSubTitle p:first-of-type {
+/* .userSubTitle p:first-of-type {
     font-size: 20px;
-}
+} */
 .v-list-item-title.headline {
     font-size: 24px;
     font-weight: 700;
+}
+.userName {
+    font-size: 20px;
+    text-align: center;
+}
+.v-list-item {
+    padding: 0;
+}
+.navMenu {
+    color: red;
+    height: 100%;
 }
 </style>

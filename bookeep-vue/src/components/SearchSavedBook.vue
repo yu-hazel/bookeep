@@ -1,6 +1,7 @@
 <template>
     <v-container class="searchBox">
-        <v-text-field v-model="searchQuery" label="책 이름 또는 저자명으로 검색" dense clearable @input="searchBooks"></v-text-field>
+        <v-text-field v-model="searchQuery" label="책 이름 또는 저자명으로 검색" rounded dense clearable @input="searchBooks"
+            prepend-inner-icon="mdi-magnify" append-inner-icon="mdi-arrow-right" class="userInput"></v-text-field>
         <v-row v-if="filteredBooks.length">
             <v-col xs="12" sm="6" md="4" lg="3" v-for="book in filteredBooks" :key="book.id">
                 <v-card @click="openBookDetail(book)">
@@ -57,5 +58,9 @@ const openBookDetail = (book) => {
 <style scoped>
 .searchBox {
     padding: 0;
+}
+
+:deep(.v-field__outline) {
+    display: none;
 }
 </style>

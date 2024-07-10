@@ -2,10 +2,12 @@
     <div class="main01">
         <!-- <h1>나의 책장 페이지</h1> -->
         <div>
+            <h3> 나의 책장</h3>
             <h1><span class="userName">{{ userName }}</span>님,</h1>
             <h2><span class="brandName">Bookeep</span>과 함께 한 권의 책이 열어주는</h2>
+            <h2>새로운 세상을 만나 보세요.</h2>
         </div>
-        <h2>새로운 세상을 만나 보세요.</h2>
+
         <div class="contentBox">
             <BookShelf class="BookShelf" />
             <BookTabs class="BookTabs" />
@@ -41,7 +43,7 @@ export default {
 };
 </script> -->
 
-<style>
+<style scoped>
 .userName {
     /* color: #A29CFE; */
     font-weight: 600;

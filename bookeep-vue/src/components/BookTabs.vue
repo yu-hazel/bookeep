@@ -58,6 +58,7 @@ watch(activeTab, () => {
 }
 .myBook {
     padding: 0;
+    max-width: 1500px;
 }
 .menu {
     font-size: 16px;
