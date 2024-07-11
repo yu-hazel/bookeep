@@ -1,7 +1,9 @@
 <template>
     <div class="bookshelf">
-        <div v-for="(book, index) in finishedBooks" :key="book.isbn" class="book" :style="bookStyles[book.isbn]">
-            <span class="book-title">{{ book.title }}</span>
+        <div class="books">
+            <div v-for="(book, index) in finishedBooks" :key="book.isbn" class="book" :style="bookStyles[book.isbn]">
+                <span class="book-title">{{ book.title }}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -78,9 +80,13 @@ watch(finishedBooks, () => {
 <style scoped>
 .bookshelf {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 10px;
     align-items: flex-end;
+    overflow-x: scroll;
+}
+.books {
+    display: flex;
 }
 
 .book {

@@ -8,8 +8,8 @@
                     <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" />
                     <div class="userSubTitle">
                         <div v-if="isLoggedIn" class="userName">
-                            <span>안녕하세요, </span>
-                            <span>{{ userName }}님!</span>
+                            <h1>안녕하세요, </h1>
+                            <h2>{{ userName }}님!</h2>
                         </div>
                         <div v-else>
                             <span>로그인 해주세요</span>
@@ -21,23 +21,30 @@
 
             <!-- <v-divider></v-divider> -->
 
-            <v-list-item link style="padding: 0;">
-                <router-link to="/">
-                    <v-list-item-title class="navMenu">나의 책장</v-list-item-title>
-                </router-link>
-            </v-list-item>
-
-            <v-list-item link style="padding: 0;">
-                <router-link to="/ReadingStatistics">
-                    <v-list-item-title class="navMenu">나의 독서통계</v-list-item-title>
-                </router-link>
-            </v-list-item>
-
-            <v-list-item link style="padding: 0;">
-                <router-link to="/SearchBooks">
-                    <v-list-item-title class="navMenu">검색하기</v-list-item-title>
-                </router-link>
-            </v-list-item>
+            <router-link to="/" class="v-list-item" custom>
+                <template v-slot="{ navigate, href, isActive, isExactActive }">
+                    <v-list-item :href="href" @click="navigate"
+                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
+                        <v-list-item-title> <v-icon>mdi-home</v-icon> 나의 책장</v-list-item-title>
+                    </v-list-item>
+                </template>
+            </router-link>
+            <router-link to="/ReadingStatistics" class="v-list-item" custom>
+                <template v-slot="{ navigate, href, isActive, isExactActive }">
+                    <v-list-item :href="href" @click="navigate"
+                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
+                        <v-list-item-title> <v-icon>mdi-chart-bar</v-icon> 나의 독서통계</v-list-item-title>
+                    </v-list-item>
+                </template>
+            </router-link>
+            <router-link to="/SearchBooks" class="v-list-item" custom>
+                <template v-slot="{ navigate, href, isActive, isExactActive }">
+                    <v-list-item :href="href" @click="navigate"
+                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
+                        <v-list-item-title> <v-icon>mdi-magnify</v-icon> 검색하기</v-list-item-title>
+                    </v-list-item>
+                </template>
+            </router-link>
 
             <v-list-item link @click="isLoggedIn ? signOut() : signIn()" style="padding: 0;">
                 <v-list-item-title class="navMenu">{{ isLoggedIn ? '로그아웃' : '로그인' }}</v-list-item-title>
@@ -147,7 +154,7 @@ v-list-item-content {
     padding: 0;
 }
 .v-list-item__content {
-  height: 100%;
+    height: 100%;
 }
 a {
     height: 100%;
@@ -166,5 +173,17 @@ a {
     border-left: 10px solid #111;
     border-right: 10px solid transparent;
 }
+</style>
 
+<style scoped>
+.v-list-item-title.headline {
+    font-size: 24px;
+    font-weight: 700;
+}
+.router-link-active .v-list-item-title,
+.router-link-exact-active .v-list-item-title {
+    font-weight: bold;
+    color: #6200EA;
+    border-left: 4px solid #6200EA;
+}
 </style>

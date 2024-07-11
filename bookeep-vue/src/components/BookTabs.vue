@@ -2,9 +2,11 @@
     <v-container class="myBook">
         <div class="tabs">
             <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2" class="menuBox">
-                <v-tab v-for="(category, index) in categories" :key="index" class="menu">{{ category }}</v-tab>
+                <v-tab v-for="(category, index) in categories" :key="index" class="menu">
+                    <h3>{{ category }}</h3>
+                </v-tab>
             </v-tabs>
-            <p>{{ activeCategoryBookCount }}권의 책 저장중</p>
+            <h3>{{ activeCategoryBookCount }}권의 책 저장중</h3>
         </div>
         <v-tabs-items v-model="activeTab">
             <v-tab-item>
@@ -55,6 +57,7 @@ watch(activeTab, () => {
 .tabs {
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 .myBook {
     padding: 0;

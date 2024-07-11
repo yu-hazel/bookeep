@@ -27,8 +27,12 @@
               length="5" half-increments clearable></v-rating>
           </div>
 
-          <v-select v-model="selectedCategory" :items="categories" label="카테고리 선택" dense class="mt-4"
-            id="modalCategory"></v-select>
+          <div class="category-buttons mt-4">
+            <v-btn v-for="category in categories" :key="category" @click="selectedCategory = category"
+              :color="selectedCategory === category ? 'primary' : ''">
+              {{ category }}
+            </v-btn>
+          </div>
           <v-btn color="primary" @click="saveBook" class="mt-4">저장</v-btn>
         </div>
       </v-card-text>
@@ -112,5 +116,10 @@ const saveBook = () => {
 .bookDetailImage {
   height: 200px;
   margin-bottom: 16px;
+}
+
+.category-buttons {
+  display: flex;
+  gap: 10px;
 }
 </style>

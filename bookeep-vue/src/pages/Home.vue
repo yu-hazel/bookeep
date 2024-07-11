@@ -1,11 +1,19 @@
 <template>
     <div class="main01">
         <!-- <h1>나의 책장 페이지</h1> -->
-        <div>
-            <h3> 나의 책장</h3>
-            <h1><span class="userName">{{ userName }}</span>님,</h1>
-            <h2><span class="brandName">Bookeep</span>과 함께 한 권의 책이 열어주는</h2>
-            <h2>새로운 세상을 만나 보세요.</h2>
+        <div class="txtBox">
+            <div style="display: flex; gap: 6px;"> <v-icon>mdi-home</v-icon>
+                <h3>나의 책장</h3>
+            </div>
+            <div class="title">
+                <h1><span class="userName">{{ userName }}</span>님,</h1>
+                <div class="subTitle">
+                    <h2 class="brandName">Bookeep</h2>
+                    <h2 style="padding-right: 6px;">과 함께 한 권의 책이 열어주는</h2>
+                    <h2>새로운 세상을 만나 보세요.
+                    </h2>
+                </div>
+            </div>
         </div>
 
         <div class="contentBox">
@@ -52,11 +60,28 @@ export default {
 .brandName {
     color: #A29CFE;
     font-size: 34px;
+    font-weight: 600;
 }
 .main01 {
-    padding: 0 5%;
+    padding: 28px 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
-.BookTabs {}
+.txtBox {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.subTitle {
+    display: flex;
+    flex-wrap: wrap;
+}
 .BookShelf {
     padding: 50px 20px 40px 20px;
     border: 1px solid #DCDCE1;
