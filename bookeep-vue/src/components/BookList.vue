@@ -5,12 +5,12 @@
                 <v-card @click="openBookDetail(book, props.category)" class="bookCard">
                     <v-img :src="book.thumbnail" aspect-ratio="1"></v-img>
                     <v-card-text class="cardText">
-                        <!-- <p v-if="props.category === '읽는 중인 책'">
+                        <p v-if="props.category === '읽는 중인 책'">
                             <v-progress-linear :model-value="calculateReadingPercentage(book.reading_page, book.pages)"
                                 color="deep-purple-lighten-3" height="5" bg-color="grey lighten-4">
                             </v-progress-linear>
                             ({{calculateReadingPercentage(book.reading_page, book.pages) }}%)
-                        </p> -->
+                        </p>
                         <!-- <br> -->
                         <!-- <v-rating :model-value="book.rating" density="compact" background-color="purple"
                             color="deep-purple-lighten-3" length="5" half-increments readonly

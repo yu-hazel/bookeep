@@ -23,13 +23,13 @@
 
             <v-list-item link style="padding: 0;">
                 <router-link to="/">
-                    <v-list-item-title>나의 책장</v-list-item-title>
+                    <v-list-item-title class="navMenu">나의 책장</v-list-item-title>
                 </router-link>
             </v-list-item>
 
             <v-list-item link style="padding: 0;">
                 <router-link to="/ReadingStatistics">
-                    <v-list-item-title>나의 독서통계</v-list-item-title>
+                    <v-list-item-title class="navMenu">나의 독서통계</v-list-item-title>
                 </router-link>
             </v-list-item>
 
@@ -40,7 +40,7 @@
             </v-list-item>
 
             <v-list-item link @click="isLoggedIn ? signOut() : signIn()" style="padding: 0;">
-                <v-list-item-title>{{ isLoggedIn ? '로그아웃' : '로그인' }}</v-list-item-title>
+                <v-list-item-title class="navMenu">{{ isLoggedIn ? '로그아웃' : '로그인' }}</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-navigation-drawer>
@@ -146,8 +146,25 @@ v-list-item-content {
 .v-list-item {
     padding: 0;
 }
-.navMenu {
-    color: red;
-    height: 100%;
+.v-list-item__content {
+  height: 100%;
 }
+a {
+    height: 100%;
+    text-decoration-line: none;
+}
+.navMenu {
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    color: #111;
+}
+.navMenu:focus {
+    background-color: red;
+    border-left: 10px solid #111;
+    border-right: 10px solid transparent;
+}
+
 </style>

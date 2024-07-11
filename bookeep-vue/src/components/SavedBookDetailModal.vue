@@ -7,7 +7,7 @@
             </v-card-title>
             <v-card-text class="bookDetailWrapper">
                 <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
-                <div v-if="isEditing">
+                <div v-if="isEditing" class="bookDetailTxt">
                     <v-text-field v-model="editedBook.title" label="제목" dense class="mt-4"
                         id="modalTitle"></v-text-field>
                     <v-text-field v-model="editedBook.pages" label="페이지 수" dense class="mt-4"
@@ -27,7 +27,7 @@
                         v-if="editedBookCategory === '다 읽은 책'"></v-rating>
                     <v-btn color="primary" @click="saveChanges" class="mt-4">저장</v-btn>
                 </div>
-                <div v-else>
+                <div v-else class="bookDetailTxt">
                     <span>{{ selectedSavedBook?.title }}</span>
                     <p>{{ Array.isArray(selectedSavedBook?.authors) ? selectedSavedBook?.authors.join(", ") : '작가 정보 없음'
                         }}</p>
@@ -139,7 +139,14 @@ const calculateReadingPercentage = (readingPage, totalPage) => {
 .bookDetailImage {
     height: auto;
     width: 100%;
-    max-width: 200px;
+    /* max-width: 200px; */
     margin-bottom: 16px;
+    border-radius: 26px;
+}
+:deep(.v-img__img--contain) {
+    object-fit: cover;
+}
+.bookDetailTxt {
+    width: 100%;
 }
 </style>
