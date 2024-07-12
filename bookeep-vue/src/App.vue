@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <NavBar />
-    <v-main>
+    <v-main class="d-flex" style="justify-content: center; ">
       <router-view />
     </v-main>
   </v-app>

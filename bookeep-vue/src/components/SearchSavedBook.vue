@@ -58,6 +58,7 @@ const openBookDetail = (book) => {
 <style scoped>
 .searchBox {
     padding: 0;
+    max-width: 2000px;
 }
 
 :deep(.v-field__outline) {

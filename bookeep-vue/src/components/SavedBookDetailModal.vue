@@ -10,10 +10,10 @@
                 <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
                 <div v-if="isEditing" class="bookDetailTxt">
                     <!-- <v-text-field v-model="editedBook.title" label="제목" dense class="mt-4" id="modalTitle"></v-text-field> -->
-                    <h1>{{ selectedSavedBook?.title }}</h1>
+                    <!-- <h1>{{ selectedSavedBook?.title }}</h1> -->
                     <div class="category-buttons mt-4">
                         <v-btn v-for="category in categories" :key="category" @click="editedBookCategory = category"
-                            :color="editedBookCategory === category ? 'primary' : ''">
+                            :color="editedBookCategory === category ? '#A29cfe' : ''" class="cartegoryBt">
                             {{ category }}
                         </v-btn>
                     </div>
@@ -22,12 +22,12 @@
                         v-if="editedBookCategory === '다 읽은 책'"></v-rating>
                     <div class="bookDayBox">
                         <div v-if="editedBookCategory !== '읽고 싶은 책'">
-                            <h3>독서 시작일</h3>
+                            <h4>독서 시작일</h4>
                             <v-text-field v-if="editedBookCategory !== '읽고 싶은 책'" v-model="editedBook.start_date"
                                 type="date" dense class="mt-4 selectDay" id="modalStartDate"></v-text-field>
                         </div>
                         <div v-if="editedBookCategory === '다 읽은 책'">
-                            <h3>독서 종료일</h3>
+                            <h4>독서 종료일</h4>
                             <v-text-field v-if="editedBookCategory === '다 읽은 책'" v-model="editedBook.end_date" type="date"
                                 dense class="mt-4 selectDay" id="modalEndDate"></v-text-field>
                         </div>
@@ -41,17 +41,22 @@
                         <v-text-field v-model="editedBook.comment" dense class="mt-4" id="modalComment"></v-text-field>
                     </div>
 
-                    <div class="bottomBt"><v-btn color="primary" @click="saveChanges" class="mt-4 saveBt">저장</v-btn></div>
+                    <div class="bottomBtBox"><v-btn color="#A29cfe" @click="saveChanges" class="mt-4 saveBt">
+                            <h5>저장</h5>
+                        </v-btn>
+                    </div>
                 </div>
+
+
                 <div v-else class="bookDetailTxt">
                     <div class="bookData">
                         <h1>{{ selectedSavedBook?.title }}</h1>
                         <div class="bookSubData">
-                            <h2 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
+                            <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
                                 selectedSavedBook?.authors.join(", ") :
                                 '작가 정보 없음'
-                            }}</h2>
-                            <h2>ISBN : {{ selectedSavedBook?.isbn }}</h2>
+                            }}</h5>
+                            <h5>ISBN : {{ selectedSavedBook?.isbn }}</h5>
                         </div>
                     </div>
                     <p v-if="selectedSavedBookCategory === '읽는 중인 책' && selectedSavedBook?.reading_page">
@@ -61,26 +66,27 @@
                             bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="10">
                         </v-progress-linear> -->
                     </p>
-                    <p>
-                        <v-rating :model-value="selectedSavedBook?.rating" density="compact" background-color="purple"
-                            color="deep-purple-lighten-3" length="5" half-increments readonly
-                            v-if="selectedSavedBookCategory === '다 읽은 책'"></v-rating>
-                    </p>
+
                     <div class="bookCustomTxt">
+                        <p>
+                            <v-rating :model-value="selectedSavedBook?.rating" density="compact" background-color="purple"
+                                color="deep-purple-lighten-3" length="5" half-increments readonly
+                                v-if="selectedSavedBookCategory === '다 읽은 책'"></v-rating>
+                        </p>
                         <div class="bookDayBox">
                             <div v-if="selectedSavedBookCategory === '읽는 중인 책' || selectedSavedBookCategory === '다 읽은 책'"
                                 class="bookDay">
-                                <h3>독서 시작일</h3>
-                                <h3 class="selectDay"> <v-icon>mdi-calendar-blank</v-icon>{{
-                                    selectedSavedBook?.start_date }} </h3>
+                                <h4>독서 시작일</h4>
+                                <h4 class="selectDay"> <v-icon>mdi-calendar-blank</v-icon>{{
+                                    selectedSavedBook?.start_date }} </h4>
                             </div>
                             <div v-if="selectedSavedBookCategory === '다 읽은 책'" class="bookDay">
-                                <h3>독서 종료일</h3>
-                                <h3 class="selectDay"><v-icon>mdi-calendar-blank</v-icon>{{ selectedSavedBook?.end_date }}
-                                </h3>
+                                <h4>독서 종료일</h4>
+                                <h4 class="selectDay"><v-icon>mdi-calendar-blank</v-icon>{{ selectedSavedBook?.end_date }}
+                                </h4>
                             </div>
                             <div class="selectDay bookPage">
-                                <h3>{{ selectedSavedBook?.pages }}쪽</h3>
+                                <h4>{{ selectedSavedBook?.pages }}쪽</h4>
                             </div>
                         </div>
                         <div class="commentBox">
@@ -88,9 +94,13 @@
                         </div>
                     </div>
 
-                    <div class="bottomBt">
-                        <v-btn color="primary" @click="startEditing" class="mt-4">수정</v-btn>
-                        <v-btn color="error" @click="deleteBook" class="mt-4">삭제하기</v-btn>
+                    <div class="bottomBtBox">
+                        <v-btn @click="deleteBook" class="mt-4 bottomBt deleteBt">
+                            <h5>삭제하기</h5>
+                        </v-btn>
+                        <v-btn color="#A29cfe" @click="startEditing" class="mt-4 bottomBt">
+                            <h5>수정하기</h5>
+                        </v-btn>
                     </div>
                 </div>
             </v-card-text>
@@ -169,12 +179,6 @@ const calculateReadingPercentage = (readingPage, totalPage) => {
 h1 {
     font-size: 28px;
 }
-h2 {
-    font-size: 18px;
-}
-h3 {
-    font-size: 14px;
-}
 .v-card-title {
     width: 100%;
     height: 87px;
@@ -217,11 +221,13 @@ h3 {
     width: 100%;
     /* height: 100%; */
     position: relative;
+    gap: 14px;
 }
 .bookData {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 4px;
+    padding: 0 0.5%;
 }
 .bookSubData {
     display: flex;
@@ -242,13 +248,15 @@ h3 {
     border: 1px solid #767676;
     border-radius: 20px;
     height: 40px;
-    width: 100%;
     align-items: center;
     justify-content: start;
     padding: 0 16px;
 }
 .bookDay {
+    display: flex;
+    flex-direction: column;
     flex: 3 1 0;
+    gap: 4px;
 }
 .bookDayBox {
     display: flex;
@@ -256,13 +264,16 @@ h3 {
     gap: 12px;
     align-items: end;
 }
+.bookDayBox h4 {
+    padding: 0 8px;
+}
 .commentBox {
     display: flex;
     min-height: 180px;
     border: 1px solid #767676;
     border-radius: 20px;
 }
-.bottomBt {
+.bottomBtBox {
     position: fixed;
     display: flex;
     width: 100%;
@@ -272,9 +283,16 @@ h3 {
     right: 0;
     padding: 20px 50px;
     border-radius: 0 0 30px 30px;
+    gap: 12px;
 }
-.bookPage {
-    flex: 1 1 0
+.bottomBt {
+    width: 120px;
+    height: 45px;
+    box-shadow: none;
+    border-radius: 20px;
+}
+.deleteBt {
+    border: 1px solid #cbcbcb;
 }
 
 :deep(.v-field__outline) {
@@ -288,7 +306,14 @@ h3 {
     display: flex;
     gap: 10px;
 }
+.cartegoryBt {
+    box-shadow: none;
+    border: 1px solid #767676;
+    border-radius: 20px;
+}
 .saveBt {
     width: 100%;
+    height: 45px;
+    border-radius: 20px;
 }
 </style>

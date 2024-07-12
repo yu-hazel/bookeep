@@ -55,13 +55,17 @@ watch(activeTab, () => {
 
 <style scoped>
 .tabs {
+    padding: 0 0.5%;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 .myBook {
     padding: 0;
-    max-width: 1500px;
+    max-width: 2000px;
+    gap: 18px;
+    display: flex;
+    flex-direction: column;
 }
 .menu {
     font-size: 16px;

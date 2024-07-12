@@ -1,54 +1,77 @@
 <template>
-    <v-navigation-drawer app permanent style="width: 240px;">
+    <v-navigation-drawer app permanent style="width: 240px; box-shadow: 0 4px 20px #eee; border: none;">
         <!-- parmanent 속성으로 항상 내비게이션 바 고정 -->
-        <v-list>
-            <v-list-item>
+        <v-list class="h-100 d-flex flex-column" style="padding: 40px 0; gap: 48px;">
+            <v-list-item style="padding: 0 32px;">
                 <v-list-item-content>
                     <v-list-item-title class="headline">Bookeep</v-list-item-title>
-                    <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" />
-                    <div class="userSubTitle">
-                        <div v-if="isLoggedIn" class="userName">
-                            <h1>안녕하세요, </h1>
-                            <h2>{{ userName }}님!</h2>
+                    <div class="w-100 d-flex flex-column profile">
+                        <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" />
+                        <div class="userSubTitle">
+                            <div v-if="isLoggedIn" class="userName">
+                                <p>안녕하세요, </p>
+                                <p>{{ userName }}님 !</p>
+                            </div>
+                            <div v-else>
+                                <h1>로그인 해주세요</h1>
+                            </div>
+                            <h4 v-if="isLoggedIn">행복을 읽는 유저</h4>
                         </div>
-                        <div v-else>
-                            <span>로그인 해주세요</span>
-                        </div>
-                        <p v-if="isLoggedIn">행복을 읽는 유저</p>
                     </div>
                 </v-list-item-content>
             </v-list-item>
 
             <!-- <v-divider></v-divider> -->
+            <div class="navMenuBox">
+                <div class="navMenu">
+                    <router-link to="/" class="v-list-item" custom>
+                        <template v-slot="{ navigate, href, isActive, isExactActive }">
+                            <v-list-item :href="href" @click="navigate"
+                                :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }"
+                                style="padding: 0;">
+                                <v-list-item-title>
+                                    <div class="d-flex menu"><v-icon>mdi-home</v-icon>
+                                        <h3>나의 책장</h3>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </template>
+                    </router-link>
+                    <router-link to="/ReadingStatistics" class="v-list-item" custom>
+                        <template v-slot="{ navigate, href, isActive, isExactActive }">
+                            <v-list-item :href="href" @click="navigate"
+                                :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }"
+                                style="padding: 0;">
+                                <v-list-item-title>
+                                    <div class="d-flex menu"><v-icon>mdi-chart-bar</v-icon>
+                                        <h3>나의 독서통계</h3>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </template>
+                    </router-link>
+                    <router-link to="/SearchBooks" class="v-list-item" custom>
+                        <template v-slot="{ navigate, href, isActive, isExactActive }">
+                            <v-list-item :href="href" @click="navigate"
+                                :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }"
+                                style="padding: 0;">
+                                <v-list-item-title>
+                                    <div class="d-flex menu"> <v-icon>mdi-magnify</v-icon>
+                                        <h3>검색하기</h3>
+                                    </div>
+                                </v-list-item-title>
+                            </v-list-item>
+                        </template>
+                    </router-link>
+                </div>
 
-            <router-link to="/" class="v-list-item" custom>
-                <template v-slot="{ navigate, href, isActive, isExactActive }">
-                    <v-list-item :href="href" @click="navigate"
-                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
-                        <v-list-item-title> <v-icon>mdi-home</v-icon> 나의 책장</v-list-item-title>
-                    </v-list-item>
-                </template>
-            </router-link>
-            <router-link to="/ReadingStatistics" class="v-list-item" custom>
-                <template v-slot="{ navigate, href, isActive, isExactActive }">
-                    <v-list-item :href="href" @click="navigate"
-                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
-                        <v-list-item-title> <v-icon>mdi-chart-bar</v-icon> 나의 독서통계</v-list-item-title>
-                    </v-list-item>
-                </template>
-            </router-link>
-            <router-link to="/SearchBooks" class="v-list-item" custom>
-                <template v-slot="{ navigate, href, isActive, isExactActive }">
-                    <v-list-item :href="href" @click="navigate"
-                        :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }">
-                        <v-list-item-title> <v-icon>mdi-magnify</v-icon> 검색하기</v-list-item-title>
-                    </v-list-item>
-                </template>
-            </router-link>
-
-            <v-list-item link @click="isLoggedIn ? signOut() : signIn()" style="padding: 0;">
-                <v-list-item-title class="navMenu">{{ isLoggedIn ? '로그아웃' : '로그인' }}</v-list-item-title>
-            </v-list-item>
+                <v-btn link @click="isLoggedIn ? signOut() : signIn()" style="padding: 0; height: 48px;"
+                    class="text-none logBt" variant="text" border>
+                    <v-list-item-title style="text-align: center;">
+                        <h3>{{ isLoggedIn ? '로그아웃' : '로그인' }}</h3>
+                    </v-list-item-title>
+                </v-btn>
+            </div>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -119,14 +142,26 @@ export default {
 };
 </script> -->
 
-<style>
+<style scoped>
+h1 {
+    font-size: 20px;
+}
+h3 {
+    letter-spacing: -0.025em;
+}
+.v-list-item {
+    padding: 0;
+}
 v-list-item-content {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 30px;
-    padding: 10px 0;
+    gap: 48px;
+}
+.profile {
+    align-items: center;
+    gap: 18px;
 }
 .profileImg {
     width: 100px;
@@ -137,7 +172,7 @@ v-list-item-content {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
 }
 /* .userSubTitle p:first-of-type {
     font-size: 20px;
@@ -147,8 +182,9 @@ v-list-item-content {
     font-weight: 700;
 }
 .userName {
-    font-size: 20px;
-    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .v-list-item {
     padding: 0;
@@ -157,25 +193,13 @@ v-list-item-content {
     height: 100%;
 }
 a {
-    height: 100%;
     text-decoration-line: none;
-}
-.navMenu {
     width: 100%;
-    height: 100%;
-    align-items: center;
-    display: flex;
-    justify-content: center;
-    color: #111;
-}
-.navMenu:focus {
-    background-color: red;
-    border-left: 10px solid #111;
-    border-right: 10px solid transparent;
-}
-</style>
 
-<style scoped>
+}
+.navMenu .v-list-item-title {
+    padding: 20px;
+}
 .v-list-item-title.headline {
     font-size: 24px;
     font-weight: 700;
@@ -185,5 +209,23 @@ a {
     font-weight: bold;
     color: #6200EA;
     border-left: 4px solid #6200EA;
+    background: #f9f8ff;
+}
+.navMenuBox {
+    display: flex;
+    align-content: space-between;
+    flex-flow: row wrap;
+    height: 100%;
+    justify-content: center;
+}
+.navMenu {
+    width: 100%;
+}
+.menu {
+    gap: 8px;
+}
+.logBt {
+    border-radius: 50px;
+    width: 130px;
 }
 </style>

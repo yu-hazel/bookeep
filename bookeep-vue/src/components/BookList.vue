@@ -1,5 +1,5 @@
 <template>
-    <v-container style="padding: 0.5%;">
+    <v-container style="padding: 0.5%; max-width: 2000px;">
         <v-row v-if="filteredBooks && filteredBooks.length">
             <v-col xs="12" sm="6" md="4" lg="3" v-for="book in filteredBooks" :key="book.isbn">
                 <v-card @click="openBookDetail(book, props.category)" class="bookCard">
@@ -9,14 +9,16 @@
                             <v-progress-linear :model-value="calculateReadingPercentage(book.reading_page, book.pages)"
                                 color="deep-purple-lighten-3" height="5" bg-color="grey lighten-4">
                             </v-progress-linear>
-                            ({{calculateReadingPercentage(book.reading_page, book.pages) }}%)
+                            ({{ calculateReadingPercentage(book.reading_page, book.pages) }}%)
                         </p>
                         <!-- <br> -->
                         <!-- <v-rating :model-value="book.rating" density="compact" background-color="purple"
                             color="deep-purple-lighten-3" length="5" half-increments readonly
                             v-if="props.category === '다 읽은 책'"></v-rating> -->
-                        <p>{{ Array.isArray(book.authors) ? book.authors.join(", ") : '작가 정보 없음' }}</p>
-                        <p><strong>{{ book.title }}</strong></p>
+                        <div class="bookData">
+                            <h4>{{ Array.isArray(book.authors) ? book.authors.join(", ") : '작가 정보 없음' }}</h4>
+                            <h5 class="bookListTitle">{{ book.title }}</h5>
+                        </div>
                         <!-- <p v-if="props.category === '읽는 중인 책'">{{ book.start_date }} ~</p> -->
                         <!-- <p v-if="props.category === '다 읽은 책'">{{ book.start_date }} ~ {{ book.end_date }}</p> -->
                     </v-card-text>
@@ -25,7 +27,7 @@
         </v-row>
         <v-row v-else>
             <v-col>
-                <p>저장된 책이 없습니다.</p>
+                <h5>저장된 책이 없습니다.</h5>
             </v-col>
         </v-row>
         <SavedBookDetailModal />
@@ -106,5 +108,13 @@ watch(() => props.category, () => {
 }
 .v-col {
     padding: 0 3%;
+}
+.bookData {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.bookListTitle {
+    font-weight: 600;
 }
 </style>

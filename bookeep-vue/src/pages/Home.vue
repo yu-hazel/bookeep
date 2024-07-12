@@ -2,7 +2,8 @@
     <div class="main01">
         <!-- <h1>나의 책장 페이지</h1> -->
         <div class="txtBox">
-            <div style="display: flex; gap: 6px;"> <v-icon>mdi-home</v-icon>
+            <div style="display: flex; gap: 8px;">
+                <v-icon>mdi-home</v-icon>
                 <h3>나의 책장</h3>
             </div>
             <div class="title">
@@ -63,15 +64,18 @@ export default {
     font-weight: 600;
 }
 .main01 {
-    padding: 28px 5%;
+    width: 100%;
+    max-width: 2000px;
+    padding: 35px 5%;
     display: flex;
     flex-direction: column;
     gap: 40px;
 }
 .txtBox {
+    padding: 0 0.5%;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 18px;
 }
 .title {
     display: flex;
@@ -82,14 +86,14 @@ export default {
     display: flex;
     flex-wrap: wrap;
 }
-.BookShelf {
+/* .BookShelf {
     padding: 50px 20px 40px 20px;
     border: 1px solid #DCDCE1;
     border-radius: 30px;
-}
+} */
 .contentBox {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 28px;
 }
 </style>
