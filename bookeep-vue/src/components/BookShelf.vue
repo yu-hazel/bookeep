@@ -1,7 +1,11 @@
 <template>
-    <div class="bookshelf">
-        <div v-for="(book, index) in finishedBooks" :key="book.isbn" class="book" :style="bookStyles[book.isbn]">
-            <span class="book-title">{{ book.title }}</span>
+    <div class="bookShelfBox">
+        <div class="bookshelf">
+            <div class="books">
+                <div v-for="(book, index) in finishedBooks" :key="book.isbn" class="book" :style="bookStyles[book.isbn]">
+                    <span class="book-title">{{ book.title }}</span>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -45,13 +49,13 @@ const getBookStyle = (book, index, fibSequence) => {
     const bookHeight = Math.floor(Math.random() * (maxHeight - minHeight + 1) + minHeight);
 
     // 기울임 각도 설정
-    const tilt = fibSequence.includes(index + 1) ? Math.random() * 10 - 5 : 0;
+    // const tilt = fibSequence.includes(index + 1) ? Math.random() * 10 - 5 : 0;
 
     return {
         width: `${bookWidth}px`,
         height: `${bookHeight}px`,
         backgroundColor: '#F2F2F5',
-        transform: `rotate(${tilt}deg)`,
+        // transform: `rotate(${tilt}deg)`,
         transformOrigin: 'bottom'
     };
 };
@@ -76,10 +80,31 @@ watch(finishedBooks, () => {
 </script>
 
 <style scoped>
+.bookShelfBox {
+    padding: 34px 20px 18px 20px;
+    border: 1px solid #DCDCE1;
+    border-radius: 30px;
+}
 .bookshelf {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-wrap: nowrap;
+
+    align-items: flex-end;
+    /* overflow-x: scroll; */
+    overflow: auto;
+}
+.bookshelf::-webkit-scrollbar {
+    bottom: 10px;
+    height: 8px;
+}
+.bookshelf::-webkit-scrollbar-thumb {
+    background: #eee;
+    border-radius: 10px;
+}
+.books {
+    padding: 20px 5px 18px 5px;
+    gap: 8px;
+    display: flex;
     align-items: flex-end;
 }
 

@@ -15,9 +15,11 @@
             <v-img :src="book.thumbnail" class="bookThumbnail" />
           </v-card-text>
           <v-card-subtitle>
-            {{ book.authors.length ? book.authors.join(", ") + " 작가님" : "작가 정보 없음" }}
+            <h4>{{ book.authors.length ? book.authors.join(", ") : "작가 정보 없음" }}</h4>
           </v-card-subtitle>
-          <v-card-title class="bookTitle"><strong>{{ book.title }}</strong></v-card-title>
+          <v-card-title class="bookTitle">
+            <h5>{{ book.title }}</h5>
+          </v-card-title>
         </v-card>
       </v-col>
     </v-row>
