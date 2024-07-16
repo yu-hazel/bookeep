@@ -16,7 +16,7 @@
                             color="deep-purple-lighten-3" length="5" half-increments readonly
                             v-if="props.category === '다 읽은 책'"></v-rating> -->
                         <div class="bookData">
-                            <h4>{{ Array.isArray(book.authors) ? book.authors.join(", ") : '작가 정보 없음' }}</h4>
+                            <h4>{{ book.authors.join(", ") || '작가 정보 없음' }}</h4>
                             <h5 class="bookListTitle">{{ book.title }}</h5>
                         </div>
                         <!-- <p v-if="props.category === '읽는 중인 책'">{{ book.start_date }} ~</p> -->

@@ -19,8 +19,9 @@
                         </v-btn>
                     </div>
                     <v-rating v-model="editedBook.rating" density="compact" background-color="purple"
-                        color="deep-purple-lighten-3" length="5" half-increments clearable
+                        color="deep-purple-lighten-3" length="5" size="x-large" half-increments clearable
                         v-if="editedBookCategory === '다 읽은 책'"></v-rating>
+                    <!-- 별점 크기 자체는 size="x-large" 로 조절이 가능한데, 그렇게 되면 간격이 벌어져...🥹 -->
                     <div class="bookCustomBox" style="display: flex; flex-direction: column; gap: 12px;">
                         <div class="bookDayBox">
                             <div v-if="editedBookCategory !== '읽고 싶은 책'">
@@ -34,7 +35,8 @@
                                     type="date" dense class="mt-4 selectDay" id="modalEndDate"></v-text-field>
                             </div>
                             <div class="bookPage selectDay" style="padding: 0;">
-                                <input v-model="editedBook.pages" dense class="mt-4" id="modalPages" placeholder="전체 페이지">쪽
+                                <input v-model="editedBook.pages" dense class="mt-4" id="modalPages"
+                                    placeholder="전체 페이지">쪽
                             </div>
                             <div v-if="editedBookCategory === '읽는 중인 책'" class="bookPage selectDay">
                                 <input v-model="editedBook.reading_page" placeholder="읽은 페이지" dense class="mt-4"
@@ -58,17 +60,19 @@
                     <div class="bookData">
                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
                             <h1>{{ selectedSavedBook?.title }}</h1>
-                            <p>
+                            <p v-if="selectedSavedBookCategory === '다 읽은 책'">
                                 <v-rating :model-value="selectedSavedBook?.rating" density="compact"
                                     background-color="purple" color="deep-purple-lighten-3" length="5" half-increments
                                     readonly v-if="selectedSavedBookCategory === '다 읽은 책'"></v-rating>
+                                {{ selectedSavedBook?.rating }}
                             </p>
                         </div>
                         <div class="bookSubData">
-                            <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
+                            <!-- <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
                                 selectedSavedBook?.authors.join(", ") :
                                 '작가 정보 없음'
-                            }}</h5>
+                                }}</h5> -->
+                            <h5 class="name">{{ selectedSavedBook?.authors.join(", ") || '작가 정보 없음' }}</h5>
                             <h5>ISBN : {{ selectedSavedBook?.isbn }}</h5>
                         </div>
                     </div>
@@ -117,7 +121,7 @@
                 </div>
 
             </v-card-text>
-            <div class="bottomBtBox">
+            <div v-if="!isEditing" class="bottomBtBox">
                 <v-btn @click="deleteBook" class="mt-4 bottomBt deleteBt">
                     <h5>삭제하기</h5>
                 </v-btn>
@@ -125,7 +129,7 @@
                     <h5>수정하기</h5>
                 </v-btn>
             </div>
-            <div class="bottomBtBox"><v-btn color="#A29cfe" @click="saveChanges" class="mt-4 saveBt">
+            <div v-if="isEditing" class="bottomBtBox"><v-btn color="#A29cfe" @click="saveChanges" class="mt-4 saveBt">
                     <h5>저장</h5>
                 </v-btn>
             </div>

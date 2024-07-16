@@ -12,7 +12,7 @@
         <div>
           <h1>{{ selectedBook?.title }}</h1>
           <div class="bookSubData">
-            <h5> {{ selectedBook?.authors?.join(", ") || '작가 정보 없음' }}</h5>
+            <h5>{{ selectedBook?.authors?.join(", ") || '작가 정보 없음' }}</h5>
             <h5><span>ISBN:</span> {{ selectedBook?.isbn }}</h5>
             <div v-if="selectedCategory === '다 읽은 책'" class="rating">
               <span>나의 평점:</span>
@@ -31,8 +31,6 @@
           <v-text-field v-if="selectedCategory !== '읽고 싶은 책'" v-model="startDate" label="독서 시작일" type="date" dense
             class="mt-4" id="modalStartDate"></v-text-field>
 
-
-
           <div class="commentBox">
             <v-text-field v-model="comment" label="코멘트" dense class="mt-4" id="modalComment"></v-text-field>
           </div>
@@ -42,7 +40,7 @@
               {{ category }}
             </v-btn>
           </div>
-          <div class="bottomBt"><v-btn color="primary" @click="saveChanges" class="mt-4 saveBt">저장</v-btn></div>
+          <div class="bottomBt"><v-btn color="primary" @click="saveBook" class="mt-4 saveBt">저장</v-btn></div>
         </div>
       </v-card-text>
     </v-card>
