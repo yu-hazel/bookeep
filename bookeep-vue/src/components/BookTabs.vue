@@ -71,4 +71,7 @@ watch(activeTab, () => {
     font-size: 16px;
     padding: 0 5px;
 }
+:deep(.v-slide-group__content) {
+    gap: 12px;
+}
 </style>

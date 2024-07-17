@@ -42,7 +42,9 @@ const getBookStyle = (book, index, fibSequence) => {
     const minPageWidth = 30; // 최소 너비
     const maxPageWidth = 80; // 최대 너비
 
-    const bookWidth = minPageWidth + ((book.pages / 1000) * (maxPageWidth - minPageWidth));
+    let bookWidth = minPageWidth + ((book.pages / 1000) * (maxPageWidth - minPageWidth));
+    bookWidth = Math.min(bookWidth, maxPageWidth);
+
     const minHeight = 150; // 최소 높이
     const maxHeight = 200; // 최대 높이
 
