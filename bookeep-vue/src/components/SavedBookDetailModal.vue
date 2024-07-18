@@ -3,7 +3,9 @@
         <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 100%;">
             <v-card-title>
                 <v-spacer class="bookCategory">
-                    <v-icon style="color: #A29cfe;">mdi-check</v-icon>{{ selectedSavedBookCategory }}</v-spacer>
+                    <v-icon style="color: #A29cfe;">mdi-check</v-icon>
+                    <h3>{{ selectedSavedBookCategory }}</h3>
+                </v-spacer>
                 <v-icon @click="closeSavedBookModal" size="x-small"
                     style="position: absolute; right: 36px; top: 32px;">mdi-close</v-icon>
             </v-card-title>
@@ -55,7 +57,7 @@
                     <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
                         <div class="rating" v-if="editedBookCategory === '다 읽은 책'"
                             style="display: flex; flex-direction: column; width: 100%; gap: 6px; margin-top: 32px; ">
-                            <h4>책의 평점을 남겨주세요.</h4>
+                            <h4 style="color: #999;">책의 평점을 남겨주세요.</h4>
                             <v-rating v-model="editedBook.rating" density="compact" background-color="purple"
                                 color="deep-purple-lighten-3" length="5" size="x-large" half-increments
                                 clearable></v-rating>
