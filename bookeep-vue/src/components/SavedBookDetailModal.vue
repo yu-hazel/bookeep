@@ -16,12 +16,10 @@
                         <div style="display: flex; flex-direction: column; gap: 8px;">
                             <h1>{{ selectedSavedBook?.title }}</h1>
                             <div class="bookSubData">
-                                <!-- <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
-                                selectedSavedBook?.authors.join(", ") :
-                                '작가 정보 없음'
-                                }}</h5> -->
                                 <h3>작가 : {{
                                     selectedSavedBook?.authors.join(", ") || '작가 정보 없음' }}</h3>
+                                <h3>발행연도 : {{ formatDate(selectedSavedBook?.datetime) || '정보 없음' }}</h3>
+                                <h3>출판사 : {{ selectedSavedBook?.publisher || '정보 없음' }}</h3>
                                 <h3>ISBN : {{ selectedSavedBook?.isbn }}</h3>
                             </div>
                         </div>
@@ -30,18 +28,17 @@
                             <v-rating :model-value="selectedSavedBook?.rating" density="compact" background-color="purple"
                                 color="deep-purple-lighten-3" length="5" half-increments readonly
                                 v-if="selectedSavedBookCategory === '다 읽은 책'" style="padding-left: -2px;"></v-rating>
-                            <!-- <v-icon style="color: #A29cfe;">mdi-star</v-icon> -->
                             ({{ selectedSavedBook?.rating }}/5)
                         </h3>
-                        <div v-if="selectedSavedBookCategory === '읽는 중인 책' && selectedSavedBook?.reading_page"
+                        <div v-if="selectedSavedBookCategory === '읽는 중인 책'"
                             style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
                             <v-progress-linear
                                 :model-value="calculateReadingPercentage(selectedSavedBook.reading_page, selectedSavedBook.pages)"
                                 bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="15"
                                 style="width: 75%; border-radius: 50px;">
                             </v-progress-linear>
-                            <h3>{{ selectedSavedBook?.reading_page }} / {{
-                                selectedSavedBook?.pages }}</h3>
+                            <h3>{{ selectedSavedBook?.reading_page || 0 }} / {{
+                                selectedSavedBook?.pages || 0 }}</h3>
                         </div>
                     </div>
                 </div>
@@ -227,6 +224,11 @@ const calculateReadingPercentage = (readingPage, totalPage) => {
     if (!readingPage || !totalPage || totalPage === 0) return 0;
     return Math.floor((readingPage / totalPage) * 100);
 };
+
+const formatDate = (datetime) => {
+    if(!datetime) return '';
+    return datetime.split('-')[0];
+}
 </script>
 
 <style scoped>

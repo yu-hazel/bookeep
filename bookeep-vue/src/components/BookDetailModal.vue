@@ -16,6 +16,8 @@
               <h1>{{ selectedBook?.title }}</h1>
               <div class="bookSubData">
                 <h3>작가 : {{ selectedBook?.authors?.join(", ") || '작가 정보 없음' }}</h3>
+                <h3>발행연도 : {{ formatDate(selectedBook?.datetime) || '정보 없음' }}</h3>
+                <h3>출판사 : {{ selectedBook?.publisher || '정보 없음' }}</h3>
                 <h3><span>ISBN:</span> {{ selectedBook?.isbn }}</h3>
               </div>
             </div>
@@ -135,6 +137,11 @@ const saveBook = () => {
   bookStore.rating = rating.value;
   bookStore.saveBook();
 };
+
+const formatDate = (datetime) => {
+  if (!datetime) return '';
+  return datetime.split('-')[0];
+}
 </script>
 
 <style scoped>

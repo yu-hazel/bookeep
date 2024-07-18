@@ -26,6 +26,9 @@ export const useBookStore = defineStore('bookStore', () => {
     const rating = ref(0);
     const readingPage = ref('');
 
+    const publisher = ref('');
+    const datetime = ref('');
+
     const user = ref(null);
 
     const setUser = (userData) => {
@@ -58,7 +61,15 @@ export const useBookStore = defineStore('bookStore', () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
-            books.value = data.documents;
+            console.log('카카오 api 데이터 : ', data);
+
+            // books.value = data.documents;
+
+            books.value = data.documents.map(book => ({
+                ...book,
+                publisher: book.publisher || '정보 없음', // publisher 필드 추가
+                datetime: book.datetime || '정보 없음' // datetime 필드 추가
+            }));
         } catch (error) {
             console.error('Error fetching books:', error);
         }
@@ -76,6 +87,9 @@ export const useBookStore = defineStore('bookStore', () => {
         startDate.value = '';
         endDate.value = '';
         rating.value = 0;
+
+        publisher.value = book.publisher; // 추가
+        datetime.value = book.datetime;
     };
 
     const closeModal = () => {
@@ -100,6 +114,8 @@ export const useBookStore = defineStore('bookStore', () => {
         const bookData = {
             user_id: user.value.id,
             title: selectedBook.value.title,
+            publisher: selectedBook.value.publisher,
+            datetime: selectedBook.value.datetime,
             thumbnail: selectedBook.value.thumbnail,
             authors: JSON.stringify(selectedBook.value.authors),
             isbn: selectedBook.value.isbn,
@@ -145,7 +161,7 @@ export const useBookStore = defineStore('bookStore', () => {
                 throw error;
             }
 
-            // console.log('Fetched books:', data); // 데이터 콘솔에 출력
+            console.log('Fetched books:', data); // 데이터 콘솔에 출력
 
             const categorizedBooks = {
                 wantToRead: [],
@@ -160,6 +176,11 @@ export const useBookStore = defineStore('bookStore', () => {
                 } catch (e) {
                     book.authors = []; // 파싱 실패 시 빈 배열로 설정
                 }
+
+                if (book.datetime) {
+                    book.datetime = book.datetime.split('-')[0];
+                }
+
                 if (book.category === '읽고 싶은 책') {
                     categorizedBooks.wantToRead.push(book);
                 } else if (book.category === '읽는 중인 책') {
@@ -199,6 +220,8 @@ export const useBookStore = defineStore('bookStore', () => {
                     id: updatedBook.id,
                     user_id: user.value.id,
                     title: updatedBook.title,
+                    publisher: updatedBook.publisher,
+                    datetime: updatedBook.datetime,
                     thumbnail: updatedBook.thumbnail,
                     authors: JSON.stringify(updatedBook.authors),
                     isbn: updatedBook.isbn,
@@ -258,6 +281,8 @@ export const useBookStore = defineStore('bookStore', () => {
         startDate,
         endDate,
         rating,
+        publisher,
+        datetime,
         searchBooks,
         selectBook,
         closeModal,
