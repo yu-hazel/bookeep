@@ -128,9 +128,25 @@ export const useBookStore = defineStore('bookStore', () => {
             category: selectedCategory.value
         };
 
-        console.log('Saving book data:', bookData); // 요청 데이터 로그 추가
+        // console.log('Saving book data:', bookData); // 요청 데이터 로그 추가
 
         try {
+            // 중복 확인 로직
+            const { data: existingBooks, error: fetchError } = await supabase
+                .from('books')
+                .select('isbn')
+                .eq('user_id', user.value.id);
+            if (fetchError) {
+                console.error('Error fetching books:', fetchError);
+                throw fetchError;
+            }
+            const isDuplicate = existingBooks.some(book => book.isbn === selectedBook.value.isbn);
+            if (isDuplicate) {
+                alert('이미 저장된 책입니다.');
+                return;
+            }
+
+            // 중복 아니면 저장
             const { data, error } = await supabase
                 .from('books')
                 .insert([bookData]);
@@ -170,7 +186,7 @@ export const useBookStore = defineStore('bookStore', () => {
                 all: [] // 전체 책 목록 추가
             };
 
-            data.forEach(book => {  
+            data.forEach(book => {
                 try {
                     book.authors = JSON.parse(book.authors); // authors를 JSON 형식으로 파싱
                 } catch (e) {

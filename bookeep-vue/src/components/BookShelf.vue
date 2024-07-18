@@ -134,5 +134,12 @@ watch(finishedBooks, () => {
 .book-title {
     font-size: 12px;
     color: #71707A;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    writing-mode: vertical-lr;
+    white-space: nowrap;
+    max-height: 100%;
+    padding: 12px 0;
 }
 </style>

@@ -6,6 +6,9 @@ body {
   letter-spacing: -0.025em;
 }
 
+* {
+  letter-spacing: -0.025em;
+}
 /* #app {
   max-width: 1280px;
   margin: 0 auto;

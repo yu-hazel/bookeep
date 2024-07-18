@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="showSavedBookModal" max-width="550" max-height="850">
+    <v-dialog v-model="showSavedBookModal" max-width="500" max-height="850">
         <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 100%;">
             <v-card-title>
                 <v-spacer class="bookCategory">
@@ -7,37 +7,44 @@
                     <h3>{{ selectedSavedBookCategory }}</h3>
                 </v-spacer>
                 <v-icon @click="closeSavedBookModal" size="x-small"
-                    style="position: absolute; right: 36px; top: 32px;">mdi-close</v-icon>
+                    style="position: absolute; right: 30px; top: 30px;">mdi-close</v-icon>
             </v-card-title>
             <v-card-text class="bookDetailWrapper">
                 <div class="DataBox" style="display: flex; gap: 32px; flex-direction: row;">
-                    <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
+                    <div style="display: flex; align-items: center;">
+                        <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
+                    </div>
                     <div class="bookData">
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <h1>{{ selectedSavedBook?.title }}</h1>
-                            <div class="bookSubData">
+                        <div style="display: flex; flex-direction: column; gap:24px;">
+                            <div style="display: flex; flex-direction: column; gap:4px;">
+                                <h1>{{ selectedSavedBook?.title }}</h1>
                                 <h3>작가 : {{
                                     selectedSavedBook?.authors.join(", ") || '작가 정보 없음' }}</h3>
-                                <h3>발행연도 : {{ formatDate(selectedSavedBook?.datetime) || '정보 없음' }}</h3>
-                                <h3>출판사 : {{ selectedSavedBook?.publisher || '정보 없음' }}</h3>
-                                <h3>ISBN : {{ selectedSavedBook?.isbn }}</h3>
+                            </div>
+                            <div class="bookSubData">
+                                <div style="display: flex; flex-direction: row; gap: 16px;">
+                                    <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #999;">발행연도 : {{
+                                        formatDate(selectedSavedBook?.datetime) || '정보 없음' }}</h4>
+                                    <h4>출판사 : {{ selectedSavedBook?.publisher || '정보 없음' }}</h4>
+                                </div>
+                                <h4>ISBN : {{ selectedSavedBook?.isbn }}</h4>
                             </div>
                         </div>
                         <h3 v-if="selectedSavedBookCategory === '다 읽은 책'"
-                            style="display: flex; align-items: center; gap: 8px; color: #767676;">
+                            style="display: flex; align-items: center; gap: 8px; color: #767676; position: relative; left: -4px;">
                             <v-rating :model-value="selectedSavedBook?.rating" density="compact" background-color="purple"
                                 color="deep-purple-lighten-3" length="5" half-increments readonly
                                 v-if="selectedSavedBookCategory === '다 읽은 책'" style="padding-left: -2px;"></v-rating>
-                            ({{ selectedSavedBook?.rating }}/5)
+                            ( {{ selectedSavedBook?.rating }} / 5 )
                         </h3>
                         <div v-if="selectedSavedBookCategory === '읽는 중인 책'"
-                            style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                            style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                             <v-progress-linear
                                 :model-value="calculateReadingPercentage(selectedSavedBook.reading_page, selectedSavedBook.pages)"
-                                bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="15"
-                                style="width: 75%; border-radius: 50px;">
+                                bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="16"
+                                style=" border-radius: 50px;">
                             </v-progress-linear>
-                            <h3>{{ selectedSavedBook?.reading_page || 0 }} / {{
+                            <h3 style=" white-space: nowrap;">{{ selectedSavedBook?.reading_page || 0 }} / {{
                                 selectedSavedBook?.pages || 0 }}</h3>
                         </div>
                     </div>
@@ -76,13 +83,13 @@
                                         dense class="mt-4 selectDay" id="modalEndDate"
                                         style="width: 100%; display: block;"></input>
                                 </div>
-                                <div v-if="editedBookCategory !== '읽고 싶은 책'" class="selectDay" style="width: 100px;">
-                                    <input v-model="editedBook.pages" dense class="mt-4 pageInput" id="modalPages"
-                                        placeholder="전체">쪽
-                                </div>
                                 <div v-if="editedBookCategory === '읽는 중인 책'" class="selectDay " style="width: 100px;">
                                     <input v-model="editedBook.reading_page" placeholder="읽은" dense class="mt-4 pageInput"
                                         id="modalReadingPage">쪽
+                                </div>
+                                <div v-if="editedBookCategory !== '읽고 싶은 책'" class="selectDay" style="width: 100px;">
+                                    <input v-model="editedBook.pages" dense class="mt-4 pageInput" id="modalPages"
+                                        placeholder="전체">쪽
                                 </div>
                             </div>
                             <div class="commentBox" style="padding: 0;">
@@ -126,12 +133,12 @@
                                         selectedSavedBook?.end_date || '연도-월-일' }}</h3>
                                 </div>
                             </div>
+                            <div v-if="selectedSavedBookCategory === '읽는 중인 책'" class="selectDay">
+                                <h3>{{ selectedSavedBook?.reading_page || 0 }}쪽</h3>
+                            </div>
                             <div v-if="selectedSavedBookCategory === '읽는 중인 책' || selectedSavedBookCategory === '다 읽은 책'"
                                 class="selectDay">
                                 <h3>{{ selectedSavedBook?.pages || 0 }}쪽</h3>
-                            </div>
-                            <div v-if="selectedSavedBookCategory === '읽는 중인 책'" class="selectDay">
-                                <h3>{{ selectedSavedBook?.reading_page || 0 }}쪽</h3>
                             </div>
                         </div>
                         <div class="commentBox">
@@ -226,9 +233,9 @@ const calculateReadingPercentage = (readingPage, totalPage) => {
 };
 
 const formatDate = (datetime) => {
-    if(!datetime) return '';
+    if (!datetime) return '';
     return datetime.split('-')[0];
-}
+};
 </script>
 
 <style scoped>
@@ -249,7 +256,7 @@ h5 {
     align-items: center;
     background-color: #fff;
     border-radius: 30px 30px 0 0;
-    padding: 15px 40px 0 40px;
+    padding: 15px 36px 0 36px;
 }
 .bookCategory {
     color: #767676;
@@ -263,7 +270,7 @@ h5 {
     gap: 6px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 10px 40px !important;
+    padding: 10px 36px !important;
 }
 .bookDetailImage {
     width: 120px;
@@ -291,13 +298,15 @@ h5 {
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding: 4px 0;
+    /* padding: 4px 0; */
     justify-content: space-between;
+    gap: 8px;
 }
 .bookSubData {
     display: flex;
     flex-direction: column;
     color: #767676;
+    gap: 6px;
 }
 
 .bookCustomTxt {
@@ -349,7 +358,7 @@ h5 {
     background-color: #fff;
     bottom: 0;
     right: 0;
-    padding: 20px 40px 24px;
+    padding: 20px 36px 24px;
     border-radius: 0 0 30px 30px;
     gap: 12px;
 }
