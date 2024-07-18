@@ -1,51 +1,98 @@
 <template>
-    <v-dialog v-model="showSavedBookModal" max-width="650" max-height="850">
+    <v-dialog v-model="showSavedBookModal" max-width="550" max-height="850">
         <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 100%;">
             <v-card-title>
                 <v-spacer class="bookCategory">
-                    <v-icon style="color: #A29cfe;">mdi-check</v-icon>{{ selectedSavedBookCategory }}</v-spacer>
+                    <v-icon style="color: #A29cfe;">mdi-check</v-icon>
+                    <h3>{{ selectedSavedBookCategory }}</h3>
+                </v-spacer>
                 <v-icon @click="closeSavedBookModal" size="x-small"
-                    style="position: absolute; right: 36px; ">mdi-close</v-icon>
+                    style="position: absolute; right: 36px; top: 32px;">mdi-close</v-icon>
             </v-card-title>
             <v-card-text class="bookDetailWrapper">
-                <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
+                <div class="DataBox" style="display: flex; gap: 32px; flex-direction: row;">
+                    <v-img :src="selectedSavedBook?.thumbnail" class="bookDetailImage" aspect-ratio="1.5"></v-img>
+                    <div class="bookData">
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <h1>{{ selectedSavedBook?.title }}</h1>
+                            <div class="bookSubData">
+                                <!-- <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
+                                selectedSavedBook?.authors.join(", ") :
+                                '작가 정보 없음'
+                                }}</h5> -->
+                                <h3>작가 : {{
+                                    selectedSavedBook?.authors.join(", ") || '작가 정보 없음' }}</h3>
+                                <h3>ISBN : {{ selectedSavedBook?.isbn }}</h3>
+                            </div>
+                        </div>
+                        <h3 v-if="selectedSavedBookCategory === '다 읽은 책'"
+                            style="display: flex; align-items: center; gap: 8px; color: #767676;">
+                            <v-rating :model-value="selectedSavedBook?.rating" density="compact" background-color="purple"
+                                color="deep-purple-lighten-3" length="5" half-increments readonly
+                                v-if="selectedSavedBookCategory === '다 읽은 책'" style="padding-left: -2px;"></v-rating>
+                            <!-- <v-icon style="color: #A29cfe;">mdi-star</v-icon> -->
+                            ({{ selectedSavedBook?.rating }}/5)
+                        </h3>
+                        <div v-if="selectedSavedBookCategory === '읽는 중인 책' && selectedSavedBook?.reading_page"
+                            style="width: 100%; display: flex; align-items: center; justify-content: space-between;">
+                            <v-progress-linear
+                                :model-value="calculateReadingPercentage(selectedSavedBook.reading_page, selectedSavedBook.pages)"
+                                bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="15"
+                                style="width: 75%; border-radius: 50px;">
+                            </v-progress-linear>
+                            <h3>{{ selectedSavedBook?.reading_page }} / {{
+                                selectedSavedBook?.pages }}</h3>
+                        </div>
+                    </div>
+                </div>
                 <div v-if="isEditing" class="bookDetailTxt">
                     <!-- <v-text-field v-model="editedBook.title" label="제목" dense class="mt-4" id="modalTitle"></v-text-field> -->
                     <!-- <h1>{{ selectedSavedBook?.title }}</h1> -->
                     <div class="category-buttons mt-4">
                         <v-btn v-for="category in categories" :key="category" @click="editedBookCategory = category"
-                            :color="editedBookCategory === category ? '#A29cfe' : ''" class="cartegoryBt">
-                            {{ category }}
+                            :class="['categoryBtn', { 'selectedCategory': editedBookCategory === category }]">
+                            <h3>{{ category }}</h3>
                         </v-btn>
                     </div>
-                    <v-rating v-model="editedBook.rating" density="compact" background-color="purple"
-                        color="deep-purple-lighten-3" length="5" size="x-large" half-increments clearable
-                        v-if="editedBookCategory === '다 읽은 책'"></v-rating>
-                    <!-- 별점 크기 자체는 size="x-large" 로 조절이 가능한데, 그렇게 되면 간격이 벌어져...🥹 -->
-                    <div class="bookCustomBox" style="display: flex; flex-direction: column; gap: 12px;">
-                        <div class="bookDayBox">
-                            <div v-if="editedBookCategory !== '읽고 싶은 책'">
-                                <h4>독서 시작일</h4>
-                                <v-text-field v-if="editedBookCategory !== '읽고 싶은 책'" v-model="editedBook.start_date"
-                                    type="date" dense class="mt-4 selectDay" id="modalStartDate"></v-text-field>
-                            </div>
-                            <div v-if="editedBookCategory === '다 읽은 책'">
-                                <h4>독서 종료일</h4>
-                                <v-text-field v-if="editedBookCategory === '다 읽은 책'" v-model="editedBook.end_date"
-                                    type="date" dense class="mt-4 selectDay" id="modalEndDate"></v-text-field>
-                            </div>
-                            <div class="bookPage selectDay" style="padding: 0;">
-                                <input v-model="editedBook.pages" dense class="mt-4" id="modalPages"
-                                    placeholder="전체 페이지">쪽
-                            </div>
-                            <div v-if="editedBookCategory === '읽는 중인 책'" class="bookPage selectDay">
-                                <input v-model="editedBook.reading_page" placeholder="읽은 페이지" dense class="mt-4"
-                                    id="modalReadingPage">쪽
-                            </div>
+                    <div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+                        <div class="rating" v-if="editedBookCategory === '다 읽은 책'"
+                            style="display: flex; flex-direction: column; width: 100%; gap: 6px; margin-top: 32px; ">
+                            <h4 style="color: #999;">책의 평점을 남겨주세요.</h4>
+                            <v-rating v-model="editedBook.rating" density="compact" background-color="purple"
+                                color="deep-purple-lighten-3" length="5" size="x-large" half-increments
+                                clearable></v-rating>
                         </div>
-                        <div class="commentBox">
-                            <textarea v-model="editedBook.comment" dense class="mt-4" id="modalComment"
-                                style="width: 100%;"></textarea>
+                        <!-- 별점 크기 자체는 size="x-large" 로 조절이 가능한데, 그렇게 되면 간격이 벌어져...🥹 -->
+                        <div class="bookCustomBox" style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                            <div class="bookDayBox">
+                                <div v-if="editedBookCategory !== '읽고 싶은 책'"
+                                    style="flex: 1 1 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <h4>독서 시작일</h4>
+                                    <input v-if="editedBookCategory !== '읽고 싶은 책'" v-model="editedBook.start_date"
+                                        type="date" dense class="mt-4 selectDay" id="modalStartDate"
+                                        style="width: 100%; display: block;"></input>
+                                </div>
+                                <div v-if="editedBookCategory === '다 읽은 책'"
+                                    style="flex: 1 1 0; display: flex; flex-direction: column; gap: 8px;">
+                                    <h4>독서 종료일</h4>
+                                    <input v-if="editedBookCategory === '다 읽은 책'" v-model="editedBook.end_date" type="date"
+                                        dense class="mt-4 selectDay" id="modalEndDate"
+                                        style="width: 100%; display: block;"></input>
+                                </div>
+                                <div v-if="editedBookCategory !== '읽고 싶은 책'" class="selectDay" style="width: 100px;">
+                                    <input v-model="editedBook.pages" dense class="mt-4 pageInput" id="modalPages"
+                                        placeholder="전체">쪽
+                                </div>
+                                <div v-if="editedBookCategory === '읽는 중인 책'" class="selectDay " style="width: 100px;">
+                                    <input v-model="editedBook.reading_page" placeholder="읽은" dense class="mt-4 pageInput"
+                                        id="modalReadingPage">쪽
+                                </div>
+                            </div>
+                            <div class="commentBox" style="padding: 0;">
+                                <textarea v-model="editedBook.comment" dense class="mt-4 " id="modalComment"
+                                    style="width: 100%;margin-top: 16px !important;padding: 0 16px 16px;"
+                                    placeholder="감상평을 작성해 주세요"></textarea>
+                            </div>
                         </div>
                     </div>
 
@@ -57,32 +104,6 @@
 
 
                 <div v-else class="bookDetailTxt">
-                    <div class="bookData">
-                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                            <h1>{{ selectedSavedBook?.title }}</h1>
-                            <p v-if="selectedSavedBookCategory === '다 읽은 책'">
-                                <v-rating :model-value="selectedSavedBook?.rating" density="compact"
-                                    background-color="purple" color="deep-purple-lighten-3" length="5" half-increments
-                                    readonly v-if="selectedSavedBookCategory === '다 읽은 책'"></v-rating>
-                                {{ selectedSavedBook?.rating }}
-                            </p>
-                        </div>
-                        <div class="bookSubData">
-                            <!-- <h5 class="name">{{ Array.isArray(selectedSavedBook?.authors) ?
-                                selectedSavedBook?.authors.join(", ") :
-                                '작가 정보 없음'
-                                }}</h5> -->
-                            <h5 class="name">{{ selectedSavedBook?.authors.join(", ") || '작가 정보 없음' }}</h5>
-                            <h5>ISBN : {{ selectedSavedBook?.isbn }}</h5>
-                        </div>
-                    </div>
-                    <p v-if="selectedSavedBookCategory === '읽는 중인 책' && selectedSavedBook?.reading_page">
-                        <span>독서 진행률: {{ selectedSavedBook?.reading_page }} / {{ selectedSavedBook?.pages }}</span>
-                        <!-- <v-progress-linear
-                            :model-value="calculateReadingPercentage(selectedSavedBook.reading_page, selectedSavedBook.pages)"
-                            bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="10">
-                        </v-progress-linear> -->
-                    </p>
 
                     <div class="bookCustomTxt">
                         <!-- <p>
@@ -96,20 +117,24 @@
                                 <h4>독서 시작일</h4>
                                 <div class="selectDay">
                                     <v-icon style="font-size: 18px; font-weight: 600;">mdi-calendar-blank</v-icon>
-                                    <h4>{{
-                                        selectedSavedBook?.start_date }}</h4>
+                                    <h3>{{
+                                        selectedSavedBook?.start_date || '연도-월-일' }}</h3>
                                 </div>
                             </div>
                             <div v-if="selectedSavedBookCategory === '다 읽은 책'" class="bookDay">
                                 <h4>독서 종료일</h4>
                                 <div class="selectDay">
                                     <v-icon style="font-size: 18px; font-weight: 600;">mdi-calendar-blank</v-icon>
-                                    <h4>{{
-                                        selectedSavedBook?.end_date }}</h4>
+                                    <h3>{{
+                                        selectedSavedBook?.end_date || '연도-월-일' }}</h3>
                                 </div>
                             </div>
-                            <div class="selectDay bookPage">
-                                <h4>{{ selectedSavedBook?.pages }}쪽</h4>
+                            <div v-if="selectedSavedBookCategory === '읽는 중인 책' || selectedSavedBookCategory === '다 읽은 책'"
+                                class="selectDay">
+                                <h3>{{ selectedSavedBook?.pages || 0 }}쪽</h3>
+                            </div>
+                            <div v-if="selectedSavedBookCategory === '읽는 중인 책'" class="selectDay">
+                                <h3>{{ selectedSavedBook?.reading_page || 0 }}쪽</h3>
                             </div>
                         </div>
                         <div class="commentBox">
@@ -206,76 +231,90 @@ const calculateReadingPercentage = (readingPage, totalPage) => {
 
 <style scoped>
 h1 {
-    font-size: 28px;
+    font-size: 24px;
+}
+h3 {
+    font-weight: 400;
 }
 h5 {
     font-weight: 400;
 }
 .v-card-title {
     width: 100%;
-    height: 85px;
+    height: 80px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #fff;
     border-radius: 30px 30px 0 0;
-    padding: 0 50px;
+    padding: 15px 40px 0 40px;
 }
 .bookCategory {
+    color: #767676;
     font-size: 18px;
     display: flex;
     gap: 6px;
 }
 .bookDetailWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 16px 40px !important;
+    padding: 10px 40px !important;
 }
 .bookDetailImage {
-    max-height: 250px;
-    width: 100%;
-    margin-bottom: 30px;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px #cbcbcb;
+    width: 120px;
+    height: 174px;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px #dddddd;
+    flex: none;
 }
 :deep(.v-img__img--contain) {
     object-fit: cover;
 }
+/* :deep(.v-rating__wrapper) {
+    width: 35px;
+    justify-content: center;
+    height: 35px;
+    align-items: center;
+} */
 .bookDetailTxt {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
-    gap: 24px;
 }
 .bookData {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding: 0 0.5%;
+    width: 100%;
+    padding: 4px 0;
+    justify-content: space-between;
 }
 .bookSubData {
     display: flex;
-    gap: 10px;
-}
-.name {
-    box-shadow: 10px 0 0 -8px #767676;
-    padding-right: 5px;
+    flex-direction: column;
+    color: #767676;
 }
 
 .bookCustomTxt {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    width: 100%;
 }
 .selectDay {
+    color: #111;
     display: flex;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #dbdbdb;
     border-radius: 20px;
     height: 36px;
     align-items: center;
     justify-content: start;
     padding: 0 16px;
+    margin-top: 0 !important;
+    gap: 8px;
 }
 .bookDay {
     display: flex;
@@ -288,14 +327,16 @@ h5 {
     width: 100%;
     gap: 12px;
     align-items: end;
+    margin-top: 18px;
+    color: #999;
 }
-.bookDayBox h4 {
-    padding: 0 8px;
+.bookDayBox h4, .rating h4 {
+    padding: 0 6px;
 }
 .commentBox {
     display: flex;
-    min-height: 180px;
-    border: 1px solid #d3d3d3;
+    min-height: 210px;
+    border: 1px solid #dbdbdb;
     border-radius: 20px;
     padding: 16px;
 }
@@ -306,7 +347,7 @@ h5 {
     background-color: #fff;
     bottom: 0;
     right: 0;
-    padding: 20px 50px;
+    padding: 20px 40px 24px;
     border-radius: 0 0 30px 30px;
     gap: 12px;
 }
@@ -314,7 +355,7 @@ h5 {
     width: 120px;
     height: 45px;
     box-shadow: none;
-    border-radius: 20px;
+    border-radius: 50px;
     margin-top: 0 !important;
 }
 .deleteBt {
@@ -329,10 +370,13 @@ h5 {
 }
 
 .category-buttons {
+    width: fit-content;
     display: flex;
-    gap: 10px;
+    gap: 12px;
+    margin-top: 24px !important;
+    border-radius: 100px;
 }
-.cartegoryBt {
+.categoryBtn {
     box-shadow: none;
     border: 1px solid #d3d3d3;
     border-radius: 20px;
@@ -344,12 +388,25 @@ h5 {
     margin-top: 0 !important;
 }
 
-.bookDetailWrapper::-webkit-scrollbar {
+.bookDetailWrapper::-webkit-scrollbar, textarea::-webkit-scrollbar {
     bottom: 10px;
     width: 12px;
 }
-.bookDetailWrapper::-webkit-scrollbar-thumb {
+.bookDetailWrapper::-webkit-scrollbar-thumb, textarea::-webkit-scrollbar-thumb {
     background: #eee;
     border-radius: 10px;
+}
+.pageInput {
+    width: 100%;
+    margin-top: 0 !important;
+    text-align: center;
+}
+Input:focus, textarea:focus {
+    outline: none;
+}
+.selectedCategory {
+    border: 2px solid #A29cfe;
+    background: #f1efff;
+    box-shadow: 0 4px 10px #fafaff;
 }
 </style>
