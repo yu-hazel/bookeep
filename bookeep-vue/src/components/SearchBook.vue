@@ -1,6 +1,15 @@
 <!-- SearchBook.vue -->
 <template>
   <v-container>
+
+    <div v-if="!isLoggedIn">
+      <span class="brandName">Bookeep</span>
+      <h2 style="padding-right: 6px;">과 함께 한 권의 책이 열어주는</h2>
+      <h2>새로운 세상을 만나 보세요.
+      </h2>
+      <p>어떤 책들이 있나 검색해 보세요!</p>
+    </div>
+
     <v-row no-gutters>
       <v-col cols=" 12">
         <v-text-field v-model="localQuery" label="책 이름을 입력하세요" @keyup.enter="searchBooks"
@@ -44,8 +53,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useBookStore } from '@/stores/bookStore';
+import { supabase } from '@/supabase';
 import BookDetailModal from './BookDetailModal.vue';
 
 const bookStore = useBookStore();
@@ -53,8 +63,10 @@ const localQuery = ref(bookStore.query);
 const query = computed(() => bookStore.query);
 const books = computed(() => bookStore.books);
 const showModal = computed(() => bookStore.showModal);
+const isLoggedIn = ref(false);
 
 const searchBooks = () => {
+  console.log('searchBooks 호출');
   bookStore.setQuery(localQuery.value);
   bookStore.searchBooks();
 };
@@ -67,9 +79,33 @@ const formatDate = (datetime) => {
   if (!datetime) return '';
   return datetime.split('-')[0];
 };
+
+const keywords = ['푸바오', '인문학', '신춘문예', '우주', '트렌드'];
+
+const getRandomKeyword = () => {
+  const randomIndex = Math.floor(Math.random() * keywords.length);
+  return keywords[randomIndex];
+};
+
+onMounted(async () => {
+  const { data } = await supabase.auth.getSession();
+  isLoggedIn.value = !!data.session;
+  console.log('isLoggedIn:', isLoggedIn.value);
+
+  if (!isLoggedIn.value) {
+    localQuery.value = getRandomKeyword();
+    console.log('localQuery 설정:', localQuery.value);
+    searchBooks();
+  }
+});
 </script>
 
 <style scoped>
+.brandName {
+  color: #A29CFE;
+  font-size: 34px;
+  font-weight: 600;
+}
 .bookCard {
   display: flex;
   /* margin: 8px; */
@@ -81,7 +117,6 @@ const formatDate = (datetime) => {
   border: 1px solid #dcdce5;
   border-radius: 12px;
 }
-
 .bookThumbnail {
   width: 120px;
   height: 174px;
@@ -92,7 +127,6 @@ const formatDate = (datetime) => {
   border-radius: 8px;
   overflow: hidden;
 }
-
 :deep(.v-field__outline) {
   display: none;
 }

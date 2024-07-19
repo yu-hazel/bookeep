@@ -24,7 +24,7 @@
             <!-- <v-divider></v-divider> -->
             <div class="navMenuBox">
                 <div class="navMenu">
-                    <router-link to="/" class="v-list-item" custom>
+                    <router-link to="/" class="v-list-item" custom v-if="isLoggedIn">
                         <template v-slot="{ navigate, href, isActive, isExactActive }">
                             <v-list-item :href="href" @click="navigate"
                                 :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }"
@@ -37,7 +37,7 @@
                             </v-list-item>
                         </template>
                     </router-link>
-                    <router-link to="/ReadingStatistics" class="v-list-item" custom>
+                    <router-link to="/ReadingStatistics" class="v-list-item" custom v-if="isLoggedIn">
                         <template v-slot="{ navigate, href, isActive, isExactActive }">
                             <v-list-item :href="href" @click="navigate"
                                 :class="{ 'router-link-active': isActive, 'router-link-exact-active': isExactActive }"

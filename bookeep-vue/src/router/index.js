@@ -7,19 +7,23 @@ const router = createRouter({
   routes: [
     { path: '/', component: () => import('@/pages/Home.vue') },
     { path: '/before-login', component: () => import('@/pages/BeforeLogin.vue') },
+    { path: '/search-books', component: () => import('@/pages/SearchBooks.vue') },
     ...routes,
   ],
 });
 
-// router.beforeEach(async (to, from, next) => {
-//   const { data } = await supabase.auth.getSession();
-//   const session = data.session;
+// 로그인 전에는 무조건 검색 페이지로 이동
+router.beforeEach(async (to, from, next) => {
+  const { data } = await supabase.auth.getSession();
+  const session = data.session;
 
-//   if (!session && to.path !== '/before-login') {
-//     next('/before-login');
-//   } else {
-//     next();
-//   }
-// });
+  if (!session && to.path === '/') {
+    next('/search-books');
+  } else if (!session && to.path !== '/before-login' && to.path !== '/search-books') {
+    next('/search-books');
+  } else {
+    next();
+  }
+});
 
 export default router;
