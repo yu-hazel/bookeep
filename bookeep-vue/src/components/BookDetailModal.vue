@@ -1,24 +1,32 @@
 <template>
-  <v-dialog v-model="showModal" max-width="550" max-height="850">
+  <v-dialog v-model="showModal" max-width="500" max-height="850">
     <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 100%;">
       <v-card-title>
         <v-spacer class="bookCategory">
           <v-icon style="color: #A29cfe;">mdi-check</v-icon>
           <h3>새로운 책</h3>
         </v-spacer>
-        <v-icon @click="closeModal" size="x-small" style="position: absolute; right: 36px; top: 32px;">mdi-close</v-icon>
+        <v-icon @click="closeModal" size="x-small" style="position: absolute; right: 30px; top: 30px;">mdi-close</v-icon>
       </v-card-title>
       <v-card-text class="bookDetailWrapper">
         <div class="DataBox" style="display: flex; gap: 32px; flex-direction: row;">
-          <v-img :src="selectedBook?.thumbnail" class="bookDetailImage"></v-img>
+          <div style="display: flex; align-items: center;">
+            <v-img :src="selectedBook?.thumbnail" class="bookDetailImage"></v-img>
+          </div>
           <div class="bookData">
-            <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; flex-direction: column; gap:4px;">
               <h1>{{ selectedBook?.title }}</h1>
-              <div class="bookSubData">
-                <h3>작가 : {{ selectedBook?.authors?.join(", ") || '작가 정보 없음' }}</h3>
-                <h3>발행연도 : {{ formatDate(selectedBook?.datetime) || '정보 없음' }}</h3>
-                <h3>출판사 : {{ selectedBook?.publisher || '정보 없음' }}</h3>
-                <h3><span>ISBN:</span> {{ selectedBook?.isbn }}</h3>
+              <h3>작가 : {{ selectedBook?.authors?.join(", ") || '작가 정보 없음' }}</h3>
+            </div>
+            <div class="bookSubData">
+
+              <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                <div style="display: flex; flex-direction: row; gap: 16px;">
+                  <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #999;">발행연도 : {{
+                    formatDate(selectedBook?.datetime) || '정보 없음' }}</h4>
+                  <h4>출판사 : {{ selectedBook?.publisher || '정보 없음' }}</h4>
+                </div>
+                <h4>ISBN: {{ selectedBook?.isbn }}</h4>
               </div>
             </div>
           </div>
@@ -141,7 +149,7 @@ const saveBook = () => {
 const formatDate = (datetime) => {
   if (!datetime) return '';
   return datetime.split('-')[0];
-}
+};
 </script>
 
 <style scoped>
@@ -162,7 +170,7 @@ h5 {
   align-items: center;
   background-color: #fff;
   border-radius: 30px 30px 0 0;
-  padding: 15px 40px 0 40px;
+  padding: 15px 36px 0 36px;
 }
 .bookCategory {
   color: #767676;
@@ -176,7 +184,7 @@ h5 {
   gap: 6px;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 10px 40px !important;
+  padding: 10px 36px !important;
 }
 .bookDetailImage {
   width: 120px;
@@ -198,14 +206,17 @@ h5 {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 4px 0;
-  justify-content: space-between;
+  padding: 8px 0;
+  /* justify-content: space-between; */
+  gap: 16px;
 }
 .bookSubData {
   display: flex;
   flex-direction: column;
   color: #767676;
+  gap: 6px;
 }
+
 .bookCustomTxt {
   display: flex;
   flex-direction: column;
@@ -255,7 +266,7 @@ h5 {
   background-color: #fff;
   bottom: 0;
   right: 0;
-  padding: 20px 40px 24px;
+  padding: 20px 36px 24px;
   border-radius: 0 0 30px 30px;
   gap: 12px;
 }
@@ -290,6 +301,8 @@ h5 {
   height: 45px;
   border-radius: 20px;
   margin-top: 0 !important;
+
+  box-shadow: none;
 }
 
 .bookDetailWrapper::-webkit-scrollbar, textarea::-webkit-scrollbar {

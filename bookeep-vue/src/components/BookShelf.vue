@@ -84,7 +84,7 @@ watch(finishedBooks, () => {
 <style scoped>
 .bookShelfBox {
     padding: 34px 20px 18px 20px;
-    border: 1px solid #DCDCE1;
+    border: 1px solid #dcdce5;
     border-radius: 30px;
 }
 .bookshelf {
@@ -118,7 +118,7 @@ watch(finishedBooks, () => {
     padding: 5px;
     color: white;
     background-color: #F2F2F5;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
     transition: 0.3s;
 }
@@ -134,5 +134,12 @@ watch(finishedBooks, () => {
 .book-title {
     font-size: 12px;
     color: #71707A;
+    height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    writing-mode: vertical-lr;
+    white-space: nowrap;
+    max-height: 100%;
+    padding: 12px 0;
 }
 </style>

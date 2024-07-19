@@ -18,7 +18,7 @@
         </div>
 
         <div class="contentBox">
-            <BookShelf class="BookShelf" />
+            <BookShelf v-if="isLoggedIn" class="BookShelf" />
             <BookTabs class="BookTabs" />
         </div>
     </div>
@@ -35,6 +35,7 @@ const userStore = useUserStore();
 const bookStore = useBookStore();
 const userName = computed(() => userStore.userName);
 const books = computed(() => bookStore.books);
+const isLoggedIn = computed(() => bookStore.isLoggedIn);
 
 onMounted(() => {
     bookStore.loadBooks();
@@ -66,7 +67,7 @@ export default {
 .main01 {
     width: 100%;
     max-width: 2000px;
-    padding: 35px 5%;
+    padding: 40px 5%;
     display: flex;
     flex-direction: column;
     gap: 40px;
