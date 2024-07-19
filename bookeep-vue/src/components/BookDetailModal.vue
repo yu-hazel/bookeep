@@ -86,8 +86,13 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, nextTick } from 'vue';
 import { useBookStore } from '@/stores/bookStore';
+import { supabase } from '@/supabase';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+console.log('Router object:', router);
 
 const bookStore = useBookStore();
 const selectedBook = computed(() => bookStore.selectedBook);
@@ -135,21 +140,76 @@ watch(() => bookStore.selectedBook, (newBook) => {
 
 const closeModal = bookStore.closeModal;
 
-const saveBook = () => {
-  bookStore.pages = pages.value;
-  bookStore.comment = comment.value;
-  bookStore.selectedCategory = selectedCategory.value;
-  bookStore.startDate = startDate.value;
-  bookStore.endDate = endDate.value;
-  bookStore.readingPage = readingPage.value;
-  bookStore.rating = rating.value;
-  bookStore.saveBook();
+const saveBook = async () => {
+  const { data } = await supabase.auth.getSession();
+  const session = data.session;
+
+  console.log('Session:', session);
+
+  if (!session) {
+    console.log('Redirecting to /before-login');
+    await nextTick();
+    router.push('/before-login'); // 로그인 페이지로 리디렉션
+    return;
+  }
+
+  const bookData = {
+    user_id: session.user.id,
+    title: selectedBook.value.title,
+    publisher: selectedBook.value.publisher,
+    datetime: selectedBook.value.datetime,
+    thumbnail: selectedBook.value.thumbnail,
+    authors: JSON.stringify(selectedBook.value.authors),
+    isbn: selectedBook.value.isbn,
+    pages: pages.value,
+    reading_page: readingPage.value,
+    comment: comment.value,
+    start_date: startDate.value === '' ? null : startDate.value,
+    end_date: endDate.value === '' ? null : endDate.value,
+    rating: rating.value,
+    category: selectedCategory.value
+  };
+
+  try {
+    // 중복 확인 로직
+    const { data: existingBooks, error: fetchError } = await supabase
+      .from('books')
+      .select('isbn')
+      .eq('user_id', session.user.id);
+    if (fetchError) {
+      console.error('Error fetching books:', fetchError);
+      throw fetchError;
+    }
+    const isDuplicate = existingBooks.some(book => book.isbn === selectedBook.value.isbn);
+    if (isDuplicate) {
+      alert('이미 저장된 책입니다.');
+      return;
+    }
+
+    // 중복 아니면 저장
+    const { data, error } = await supabase
+      .from('books')
+      .insert([bookData]);
+
+    if (error) {
+      console.error('Supabase error:', error); // Supabase 에러 로그 추가
+      throw error;
+    }
+
+    alert('책이 저장되었습니다.');
+    loadBooks();
+    closeModal();
+  } catch (error) {
+    console.error('Error saving book:', error);
+    alert('책 저장에 실패했습니다.');
+  }
 };
 
 const formatDate = (datetime) => {
   if (!datetime) return '';
   return datetime.split('-')[0];
 };
+
 </script>
 
 <style scoped>

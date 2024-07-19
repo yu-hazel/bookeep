@@ -102,13 +102,10 @@ export const useBookStore = defineStore('bookStore', () => {
     };
 
     const saveBook = async () => {
-        // if (!user.value) {
-        //     console.error('사용자가 로그인되어 있지 않습니다.');
-        //     return;
-        // }
+        console.log('isLoggedIn:', isLoggedIn.value);
 
         if (!isLoggedIn.value) {
-            router.push('/BeforeLogin'); // 로그인 페이지로 리디렉션
+            router.push('/before-login'); // 로그인 페이지로 리디렉션
             return;
         }
 
