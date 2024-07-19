@@ -301,6 +301,8 @@ h5 {
   height: 45px;
   border-radius: 20px;
   margin-top: 0 !important;
+
+  box-shadow: none;
 }
 
 .bookDetailWrapper::-webkit-scrollbar, textarea::-webkit-scrollbar {

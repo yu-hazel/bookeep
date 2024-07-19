@@ -36,6 +36,7 @@ export const useBookStore = defineStore('bookStore', () => {
         isLoggedIn.value = !!userData;
         if (userData) {
             loadBooks();
+            // console.log('로그인상태 :', isLoggedIn.value);
         }
     };
 

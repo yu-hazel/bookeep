@@ -2,22 +2,24 @@
 <template>
   <v-container>
     <v-row no-gutters>
-      <v-col cols="12">
+      <v-col cols=" 12">
         <v-text-field v-model="localQuery" label="책 이름을 입력하세요" @keyup.enter="searchBooks"
           @click:prepend-inner="searchBooks" @click:append-inner="searchBooks" prepend-inner-icon="mdi-magnify"
           append-inner-icon="mdi-arrow-right" class="searchField" filled rounded dense />
       </v-col>
     </v-row>
-    <v-row v-if="books.length">
-      <v-col v-for="(book, index) in books" :key="index" style="padding: 8px; max-width: 487px;">
+    <v-row v-if="books.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));">
+      <v-col v-for="(book, index) in books" :key="index" style="padding: 8px;">
         <v-card class="bookCard" @click="selectBook(book)" outlined flat>
           <v-card-text class="bookThumbnail">
             <v-img :src="book.thumbnail" />
           </v-card-text>
           <div
-            style="min-width:180px; width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
+            style="width: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 8px 0;">
             <div>
-              <p>{{ book.title }}</p>
+              <p
+                style="overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical">
+                {{ book.title }}</p>
               <h3>{{ book.authors.length ? book.authors.join(", ") : "작가 정보 없음" }}</h3>
             </div>
             <div style="display: flex; flex-direction: column; gap: 4px;">
@@ -30,6 +32,11 @@
             </div>
           </div>
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else>
+      <v-col>
+        <h3 style="text-align: center; padding: 40px 0;">검색 결과가 없습니다.</h3>
       </v-col>
     </v-row>
     <BookDetailModal v-model="showModal" />
@@ -71,7 +78,7 @@ const formatDate = (datetime) => {
   gap: 24px;
   padding: 20px;
   /* background-color: #f7f7f7; */
-  border: 1px solid #eeeeee;
+  border: 1px solid #dcdce5;
   border-radius: 12px;
 }
 

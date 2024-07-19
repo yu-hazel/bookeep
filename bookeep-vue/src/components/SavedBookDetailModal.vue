@@ -41,7 +41,7 @@
                             style="width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
                             <v-progress-linear
                                 :model-value="calculateReadingPercentage(selectedSavedBook.reading_page, selectedSavedBook.pages)"
-                                bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="16"
+                                bg-color="deep-purple-lighten-3" color="deep-purple-lighten-1" height="14"
                                 style=" border-radius: 50px;">
                             </v-progress-linear>
                             <h3 style=" white-space: nowrap;">{{ selectedSavedBook?.reading_page || 0 }} / {{
@@ -142,7 +142,7 @@
                             </div>
                         </div>
                         <div class="commentBox">
-                            <h4>{{ selectedSavedBook?.comment }}</h4>
+                            <h4>{{ selectedSavedBook?.comment || '작성된 감상평이 없습니다.' }}</h4>
                         </div>
                     </div>
 
@@ -318,7 +318,7 @@ h5 {
 .selectDay {
     color: #111;
     display: flex;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #dcdce5;
     border-radius: 20px;
     height: 36px;
     align-items: center;
@@ -347,7 +347,7 @@ h5 {
 .commentBox {
     display: flex;
     min-height: 210px;
-    border: 1px solid #dbdbdb;
+    border: 1px solid #dcdce5;
     border-radius: 20px;
     padding: 16px;
 }
@@ -370,7 +370,7 @@ h5 {
     margin-top: 0 !important;
 }
 .deleteBt {
-    border: 1px solid #cbcbcb;
+    border: 1px solid #dcdce5;
 }
 
 :deep(.v-field__outline) {
@@ -389,7 +389,7 @@ h5 {
 }
 .categoryBtn {
     box-shadow: none;
-    border: 1px solid #d3d3d3;
+    border: 1px solid #dcdce5;
     border-radius: 20px;
 }
 .saveBt {
@@ -397,6 +397,7 @@ h5 {
     height: 45px;
     border-radius: 20px;
     margin-top: 0 !important;
+    box-shadow: none;
 }
 
 .bookDetailWrapper::-webkit-scrollbar, textarea::-webkit-scrollbar {
