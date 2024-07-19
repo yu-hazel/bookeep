@@ -98,8 +98,8 @@ const signIn = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-            redirectTo: window.location.origin,
-            // redirectTo: 'https://yu-hazel.github.io/bookeep/', // ❗️배포용! 빌드할때 이걸로 설정해야함
+            // redirectTo: window.location.origin,
+            redirectTo: 'https://yu-hazel.github.io/bookeep/', // ❗️배포용! 빌드할때 이걸로 설정해야함
         },
     });
     if (error) console.error('Error: ', error.message);
