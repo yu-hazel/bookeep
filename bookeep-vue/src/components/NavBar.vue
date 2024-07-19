@@ -6,7 +6,7 @@
                 <v-list-item-content>
                     <v-list-item-title class="headline">Bookeep</v-list-item-title>
                     <div class="w-100 d-flex flex-column profile">
-                        <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" />
+                        <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" @click="signIn" />
                         <div class="userSubTitle">
                             <div v-if="isLoggedIn" class="userName">
                                 <p>안녕하세요, </p>
