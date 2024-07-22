@@ -3,12 +3,12 @@
   <v-container>
 
     <div v-if="!isLoggedIn">
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <v-icon>mdi-magnify</v-icon>
+        <h3>검색하기</h3>
+      </div>
       <div style=" display: flex; flex-direction: column; gap: 48px; padding: 4px 0 18px 0;">
         <div class="txtBox">
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <v-icon>mdi-magnify</v-icon>
-            <h3>검색하기</h3>
-          </div>
           <div class="title">
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; gap: 6px;">
