@@ -17,7 +17,7 @@
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 4px;">
                             <div style="display: flex; flex-direction: row; gap: 16px;">
-                                <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #999;">발행연도 : {{
+                                <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #c4c4c4;">발행연도 : {{
                                     formatDate(book?.datetime) || '정보 없음' }}</h4>
                                 <h4>출판사 : {{ book?.publisher || '정보 없음' }}</h4>
                             </div>

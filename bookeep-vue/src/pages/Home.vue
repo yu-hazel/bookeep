@@ -7,10 +7,13 @@
                 <h3>나의 책장</h3>
             </div>
             <div class="title">
-                <h1><span class="userName">{{ userName }}</span>님,</h1>
+                <h1> <span class="userName">{{ userName }}</span>님,</h1>
                 <div class="subTitle">
-                    <h2 class="brandName">Bookeep</h2>
-                    <h2 style="padding-right: 6px;">과 함께 한 권의 책이 열어주는</h2>
+                    <div style="display: flex; align-items: center; padding-right: 6px;">
+                        <h2 class="brandName">Bookeep</h2>
+                        <h2>과 함께</h2>
+                    </div>
+                    <h2>한 권의 책이 열어주는</h2>
                     <h2>새로운 세상을 만나 보세요.
                     </h2>
                 </div>
@@ -57,12 +60,13 @@ export default {
 .userName {
     /* color: #A29CFE; */
     font-weight: 600;
-    font-size: 42px;
+    font-size: 52px;
 }
 .brandName {
     color: #A29CFE;
-    font-size: 34px;
+    font-size: 36px;
     font-weight: 600;
+    letter-spacing: 0;
 }
 .main01 {
     width: 100%;
@@ -76,16 +80,17 @@ export default {
     padding: 0 0.5%;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 24px;
 }
 .title {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 4px;
 }
 .subTitle {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
 }
 /* .BookShelf {
     padding: 50px 20px 40px 20px;
