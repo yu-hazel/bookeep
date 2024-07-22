@@ -1,8 +1,8 @@
 <template>
     <v-container class="searchBox" style="max-width: 2000px; margin: 0; padding: 8px 0;">
-        <v-text-field v-model="searchQuery" label="책 이름 또는 저자명으로 검색" rounded dense clearable @input="searchBooks"
-            prepend-inner-icon="mdi-magnify" append-inner-icon="mdi-arrow-right" class="userInput"
-            style=" width: 100%;"></v-text-field>
+        <v-text-field v-model="searchQuery" rounded dense clearable @input="searchBooks" prepend-inner-icon="mdi-magnify"
+            append-inner-icon="mdi-arrow-right" class="userInput" style=" width: 100%;"
+            placeholder="책 이름 또는 저자명을 입력하세요"></v-text-field>
         <v-row v-if="filteredBooks.length" class="saveBookBox"
             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));">
             <v-col v-for="book in filteredBooks" :key="book.id" style="padding: 8px;">

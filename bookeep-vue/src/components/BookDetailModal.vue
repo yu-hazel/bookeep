@@ -215,6 +215,7 @@ const formatDate = (datetime) => {
 <style scoped>
 h1 {
   font-size: 24px;
+  font-weight: 600;
 }
 h3 {
   font-weight: 400;

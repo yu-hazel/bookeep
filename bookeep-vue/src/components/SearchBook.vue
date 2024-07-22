@@ -3,21 +3,47 @@
   <v-container>
 
     <div v-if="!isLoggedIn">
-      <span class="brandName">Bookeep</span>
-      <h2 style="padding-right: 6px;">과 함께 한 권의 책이 열어주는</h2>
-      <h2>새로운 세상을 만나 보세요.
-      </h2>
-      <p>어떤 책들이 있나 검색해 보세요!</p>
+      <div style=" display: flex; flex-direction: column; gap: 48px; padding: 4px 0 18px 0;">
+        <div class="txtBox">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <v-icon>mdi-magnify</v-icon>
+            <h3>검색하기</h3>
+          </div>
+          <div class="title">
+            <div style="display: flex; flex-direction: column;">
+              <div style="display: flex; gap: 6px;">
+                <h1 style=" color: #a29cfe; letter-spacing: 0; font-size: 48px;">Bookeep</h1>
+                <h1>과 함께 </h1>
+              </div>
+              <h1>당신을 기다리는 16만권의 새로운 세상</h1>
+            </div>
+            <div>
+              <div class="subTitle">
+                <h2>로그인 하고</h2>
+                <!-- <div style="display: flex;">
+                  <h2 class="brandName">Bookeep</h2>
+                  <h2>과 함께 </h2>
+                </div> -->
+                <h2>독서의 새로운 세상을 탐험해보세요.</h2>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <!-- <h2>로그인 하고 나의 독서 기록을 시작해보세요.</h2> -->
+        <h3 style="padding: 0 8px;;">검색을 통해 어떤 도서가 있는지 확인해보세요</h3>
+      </div>
     </div>
 
     <v-row no-gutters>
       <v-col cols=" 12">
-        <v-text-field v-model="localQuery" label="책 이름을 입력하세요" @keyup.enter="searchBooks"
-          @click:prepend-inner="searchBooks" @click:append-inner="searchBooks" prepend-inner-icon="mdi-magnify"
-          append-inner-icon="mdi-arrow-right" class="searchField" filled rounded dense />
+        <v-text-field v-model="localQuery" @keyup.enter="searchBooks" @click:prepend-inner="searchBooks"
+          @click:append-inner="searchBooks" prepend-inner-icon="mdi-magnify" append-inner-icon="mdi-arrow-right"
+          class="searchField" filled rounded dense placeholder="책 이름을 입력하세요" />
       </v-col>
     </v-row>
-    <v-row v-if="books.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));">
+    <v-row v-if="books.length > 0" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(460px,
+          1fr));">
       <v-col v-for="(book, index) in books" :key="index" style="padding: 8px;">
         <v-card class="bookCard" @click="selectBook(book)" outlined flat>
           <v-card-text class="bookThumbnail">
@@ -33,7 +59,7 @@
             </div>
             <div style="display: flex; flex-direction: column; gap: 4px;">
               <div style="display: flex; flex-direction: row; gap: 16px;">
-                <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #999;">발행연도 : {{
+                <h4 style="padding-right: 12px; box-shadow: 5px 0 0 -3px #c4c4c4;">발행연도 : {{
                   formatDate(book?.datetime) || '정보 없음' }}</h4>
                 <h4>출판사 : {{ book?.publisher || '정보 없음' }}</h4>
               </div>
@@ -105,6 +131,7 @@ onMounted(async () => {
   color: #A29CFE;
   font-size: 34px;
   font-weight: 600;
+  letter-spacing: 0;
 }
 .bookCard {
   display: flex;
@@ -127,6 +154,24 @@ onMounted(async () => {
   border-radius: 8px;
   overflow: hidden;
 }
+.txtBox {
+  padding: 0 0.5%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.title {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.subTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
 :deep(.v-field__outline) {
   display: none;
 }

@@ -145,6 +145,7 @@ export default {
 <style scoped>
 h1 {
     font-size: 20px;
+    font-weight: 500;
 }
 h3 {
     letter-spacing: -0.025em;
