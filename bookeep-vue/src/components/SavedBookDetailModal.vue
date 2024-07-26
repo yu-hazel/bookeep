@@ -212,7 +212,7 @@ const saveChanges = async () => {
 const deleteBook = async () => {
     try {
         await bookStore.deleteSavedBook(editedBook.value.id);
-        alert('책이 삭제되었습니다.');
+        // alert('책이 삭제되었습니다.');
     } catch (error) {
         console.error('Error deleting book:', error);
         alert('책 삭제에 실패했습니다.');

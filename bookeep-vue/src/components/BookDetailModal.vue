@@ -92,7 +92,7 @@ import { supabase } from '@/supabase';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-console.log('Router object:', router);
+// console.log('Router object:', router);
 
 const bookStore = useBookStore();
 const selectedBook = computed(() => bookStore.selectedBook);
@@ -144,11 +144,9 @@ const saveBook = async () => {
   const { data } = await supabase.auth.getSession();
   const session = data.session;
 
-  console.log('Session:', session);
+  // console.log('Session:', session);
 
   if (!session) {
-    console.log('Redirecting to /BeforeLogin');
-    await nextTick();
     router.push('/BeforeLogin'); // 로그인 페이지로 리디렉션
     return;
   }
@@ -171,37 +169,12 @@ const saveBook = async () => {
   };
 
   try {
-    // 중복 확인 로직
-    const { data: existingBooks, error: fetchError } = await supabase
-      .from('books')
-      .select('isbn')
-      .eq('user_id', session.user.id);
-    if (fetchError) {
-      console.error('Error fetching books:', fetchError);
-      throw fetchError;
-    }
-    const isDuplicate = existingBooks.some(book => book.isbn === selectedBook.value.isbn);
-    if (isDuplicate) {
-      alert('이미 저장된 책입니다.');
-      return;
-    }
-
-    // 중복 아니면 저장
-    const { data, error } = await supabase
-      .from('books')
-      .insert([bookData]);
-
-    if (error) {
-      console.error('Supabase error:', error); // Supabase 에러 로그 추가
-      throw error;
-    }
-
-    alert('책이 저장되었습니다.');
-    loadBooks();
+    await bookStore.saveBook(bookData);
+    bookStore.loadBooks();
     closeModal();
   } catch (error) {
-    // console.error('Error saving book:', error);
-    // alert('책 저장에 실패했습니다.');
+    console.error('Error saving book:', error);
+    alert('책 저장에 실패했습니다.');
   }
 };
 

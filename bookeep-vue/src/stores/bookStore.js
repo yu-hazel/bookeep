@@ -101,44 +101,21 @@ export const useBookStore = defineStore('bookStore', () => {
         query.value = newQuery;
     };
 
-    const saveBook = async () => {
-        console.log('isLoggedIn:', isLoggedIn.value);
-
-        if (!isLoggedIn.value) {
-            router.push('/before-login'); // 로그인 페이지로 리디렉션
-            return;
-        }
-
-        const bookData = {
-            user_id: user.value.id,
-            title: selectedBook.value.title,
-            publisher: selectedBook.value.publisher,
-            datetime: selectedBook.value.datetime,
-            thumbnail: selectedBook.value.thumbnail,
-            authors: JSON.stringify(selectedBook.value.authors),
-            isbn: selectedBook.value.isbn,
-            pages: pages.value,
-            reading_page: readingPage.value,
-            comment: comment.value,
-            start_date: startDate.value === '' ? null : startDate.value,
-            end_date: endDate.value === '' ? null : endDate.value,
-            rating: rating.value,
-            category: selectedCategory.value
-        };
-
-        // console.log('Saving book data:', bookData); // 요청 데이터 로그 추가
-
+    const saveBook = async (bookData) => {
         try {
             // 중복 확인 로직
             const { data: existingBooks, error: fetchError } = await supabase
                 .from('books')
                 .select('isbn')
-                .eq('user_id', user.value.id);
+                .eq('user_id', bookData.user_id);
+
             if (fetchError) {
                 console.error('Error fetching books:', fetchError);
                 throw fetchError;
             }
-            const isDuplicate = existingBooks.some(book => book.isbn === selectedBook.value.isbn);
+
+            const isDuplicate = existingBooks.some(book => book.isbn === bookData.isbn);
+
             if (isDuplicate) {
                 alert('이미 저장된 책입니다.');
                 return;
@@ -150,16 +127,16 @@ export const useBookStore = defineStore('bookStore', () => {
                 .insert([bookData]);
 
             if (error) {
-                console.error('Supabase error:', error); // Supabase 에러 로그 추가
+                console.error('Supabase error:', error);
                 throw error;
             }
 
             alert('책이 저장되었습니다.');
-            loadBooks();
+            await loadBooks();
             closeModal();
         } catch (error) {
-            // console.error('Error saving book:', error);
-            // alert('책 저장에 실패했습니다.');
+            console.error('Error saving book:', error);
+            alert('책 저장에 실패했습니다.');
         }
     };
 
@@ -175,7 +152,7 @@ export const useBookStore = defineStore('bookStore', () => {
                 throw error;
             }
 
-            console.log('Fetched books:', data); // 데이터 콘솔에 출력
+            // console.log('Fetched books:', data); // 데이터 콘솔에 출력
 
             const categorizedBooks = {
                 wantToRead: [],
