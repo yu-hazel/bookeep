@@ -105,57 +105,7 @@
 
 <br>
 
-## ☄️ 트러블 슈팅
-
-1. **supabase 데이터 업데이트시 CORS 이슈**
-   - 문제 상황 <br>
-     supabase에 저장된 책 데이터를 수정(update)하는 과정에서 PATCH method가 허용되지 않는다는 CORS 이슈 발생 <br>
-     
-   ```
-   blocked by CORS policy: Method PATCH is not allowed
-   by Access-Control-Allow-Methods in preflight response.
-   ```
-
-   - 원인 <br>
-     HTTP 요청의 preflight 단계에 의해 update 요청이 막힘 <br>
-     PATCH 메서드는 CORS 정책에 따라 preflight 요청을 필요로 하는데, 서버가 Access-Control-Allow-Methods 헤더에 PATCH 메서드를 명시적으로 포함하지 않으면, 브라우저가 보안상의 이유로 요청을 보내지 않아서 발생한 이슈.
-     
-     
-   - 최종 해결을 위한 시행착오 <br>
-     vite.config.js 파일에 proxy 설정 <br>
-     supabase edge function 사용하여 헤더 설정
-
-
-   - 해결 방법 <br>
-     supabase의 `upsert` 메서드를 이용하여 해결
-
-
-   - 느낀 점 <br>
-     저장된 데이터를 수정하는 방식에 PATCH와 POST방식을 둘 다 적용시킬 수 있음을 알게 되었고, 사용하는 라이브러리 등의 docs를 보다 꼼꼼히 읽어보아야겠다고 생각함.
-
-<br>
-
-2. **빌드 후 로그인시 404 페이지 이슈**
-   - 문제 상황 <br>
-     빌드한 파일을 gh-pages로 확인했을 때 로그인 이후 404페이지로 리디렉션되는 상황 발생
-
-
-   - 원인 <br>
-     로그인 함수의 `options : redirectTo`가 개발환경에서 확인하기 위한 `window.location.origin`으로 빌드되어 발생한 이슈
-
-
-   - 해결 방법 <br>
-     개발 환경에서 확인용, 배포용 redirectTo를 각각 설정하여 해결
-
-
-   - 느낀 점 <br>
-     개발 과정에서는 발생하지 않았던 변수에 대응하려면 중간 확인 과정을 틈틈이 거쳐야겠다고 생각하는 계기가 되었음.
-
-
-<br>
-
-## 🪴 개선 목표
-
+## 🪴 개선 예정
 
 - gh-pages가 SPA를 지원하지 않으므로, vercel을 이용한 배포 예정
      
