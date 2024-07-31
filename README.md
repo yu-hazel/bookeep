@@ -15,7 +15,7 @@
 
 - 프로젝트 이름 : 북킵 (bookeep)
 - 진행 기간 : 2024.06.13 ~ 2024.07.22
-- [배포 주소](https://https://yu-hazel.github.io/bookeep/)
+- [배포 주소](https://yu-hazel.github.io/bookeep/)
 - [UI정의서](https://drive.google.com/file/d/1K_zlPKP2xPGxW_QBFP0dK6U8mF5RJzvL/view?usp=drive_link)
 - [Figma Designboard](https://www.figma.com/design/bxfKv52XQX10qgWkhsteyx/Bookeep-design?node-id=0-1&t=T1mKDHqJsNiChK8N-1)
 
