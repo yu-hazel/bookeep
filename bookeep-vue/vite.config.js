@@ -18,15 +18,16 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
-  // server: {
-  //   proxy: {
-  //     '/supabase': {
-  //       target: 'https://vovzpunshmcodmkletaw.supabase.co',
-  //       // 리포지토리 주소로 변경하고 빌드하기
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/supabase/, ''),
-  //       secure: false,
-  //     },
-  //   },
-  // },
+  
+  // vercel 에러 수정용 코드 추가 테스트
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      output: {
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`,
+      },
+    },
+  },
 });
