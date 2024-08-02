@@ -15,7 +15,7 @@
 
 - 프로젝트 이름 : 북킵 (bookeep)
 - 진행 기간 : 2024.06.13 ~ 2024.07.22
-- [배포 주소](https://yu-hazel.github.io/bookeep/)
+- [배포 주소](https://bookeep-beta.vercel.app/bookeep/)
 - [UI정의서](https://drive.google.com/file/d/1K_zlPKP2xPGxW_QBFP0dK6U8mF5RJzvL/view?usp=drive_link)
 - [Figma Designboard](https://www.figma.com/design/bxfKv52XQX10qgWkhsteyx/Bookeep-design?node-id=0-1&t=T1mKDHqJsNiChK8N-1)
 
@@ -38,6 +38,7 @@
 ![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 ![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF)
 ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
@@ -102,10 +103,4 @@
   - Vue-router를 활용하여 단일 페이지 애플리케이션(SPA)을 구현함. Vue-router를 통해 페이지 간의 탐색이 매끄럽게 이루어져 사용자 경험을 향상시키고자 함.
   - 라우팅 구조 설계로 사용자의 로그인 상태에 따라 다른 페이지로 리디렉션되도록 설계함. 이를 통해 로그인 전후의 사용자 경험을 다르게 제공할 수 있었음.
   - 네비게이션 가드 : 사용자 인증 상태를 기반으로 '나의 책장'페이지 접근을 제어하는 네비게이션 가드를 설정함. 사용자가 로그인하지 않은 상태에서 접근할 수 있는 페이지를 제어하는 데 중요한 역할을 함.
-
-<br>
-
-## 🪴 개선 예정
-
-- gh-pages가 SPA를 지원하지 않으므로, vercel을 이용한 배포 예정
      
