@@ -23,7 +23,7 @@
 
 | <img src="https://github.com/user-attachments/assets/b5a24df4-177b-4fde-a5a8-a54d04570032" width="150" height="150"> | <img src="https://github.com/user-attachments/assets/6aec1026-b507-4c78-92eb-21670bf6e4de" width="150" height="150"> |
 |:---:|:---:|
-| **유혜인** | **박선정** |
+| **유혜인(PM)** | **박선정** |
 | [@yu-hazel](https://github.com/yu-hazel) | [@adooooore](https://github.com/adooooore) |
 | FE Developer | Designer |
 
