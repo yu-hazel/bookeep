@@ -1,12 +1,18 @@
 <template>
-    <v-navigation-drawer app permanent style="width: 240px; box-shadow: 0 4px 20px #eee; border: none;">
+    <v-app-bar app v-if="!isPermanent">
+        <v-app-bar-nav-icon @click="toggleDrawer"></v-app-bar-nav-icon>
+        <!-- <v-toolbar-title>Bookeep</v-toolbar-title> -->
+    </v-app-bar>
+    <v-navigation-drawer v-model="drawer" app temporary :permanent="isPermanent" :temporary="!isPermanent"
+        style="width: 240px; box-shadow: 0 4px 20px #eee; border: none;">
         <!-- parmanent 속성으로 항상 내비게이션 바 고정 -->
         <v-list class="h-100 d-flex flex-column" style="padding: 40px 0; gap: 48px;">
             <v-list-item style="padding: 0 32px;">
                 <v-list-item-content>
                     <v-list-item-title class="headline">Bookeep</v-list-item-title>
                     <div class="w-100 d-flex flex-column profile">
-                        <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg" @click="signIn" />
+                        <v-img :src="profileImg" alt="Profile Image" max-width="100" class="profileImg"
+                            @click="signIn" />
                         <div class="userSubTitle">
                             <div v-if="isLoggedIn" class="userName">
                                 <p>안녕하세요, </p>
@@ -77,11 +83,35 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import { createClient } from '@supabase/supabase-js';
 import { useUserStore } from '@/stores/userStore';
 import { useBookStore } from '@/stores/bookStore';
 import profileImgPath from '@/assets/profile_img.png';
+
+const drawer = ref(false);
+const windowWidth = ref(window.innerWidth);
+
+const isPermanent = computed(() => windowWidth.value >= 960);
+
+const toggleDrawer = () => {
+    drawer.value = !drawer.value;
+};
+
+const handleResize = () => {
+    windowWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+    if (isPermanent) {
+        drawer.value = true;
+    }
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+});
 
 const profileImg = ref(profileImgPath);
 const isLoggedIn = ref(false);
@@ -98,8 +128,8 @@ const signIn = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-            // redirectTo: window.location.origin,
-            redirectTo: 'https://bookeep-beta.vercel.app/', // vercel 배포 도메인
+            redirectTo: window.location.origin,
+            // redirectTo: 'https://bookeep-beta.vercel.app/', // vercel 배포 도메인
             // redirectTo: 'https://yu-hazel.github.io/bookeep/', // ❗️배포용! 빌드할때 이걸로 설정해야함
         },
     });

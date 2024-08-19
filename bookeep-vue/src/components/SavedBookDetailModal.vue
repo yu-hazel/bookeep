@@ -1,6 +1,6 @@
 <template>
     <v-dialog v-model="showSavedBookModal" max-width="500" max-height="850">
-        <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 100%;">
+        <v-card style="border-radius: 30px; box-shadow: 0 4px 25px #767676; height: 95vh;">
             <v-card-title>
                 <v-spacer class="bookCategory">
                     <v-icon style="color: #A29cfe;">mdi-check</v-icon>

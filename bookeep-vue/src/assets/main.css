@@ -5,53 +5,17 @@ body {
   font-family: 'Pretendard', sans-serif;
   letter-spacing: -0.025em;
 }
-
 * {
   letter-spacing: -0.025em;
 }
-/* #app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
-}
-
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
-} */
-
-
 h1 {
-  font-size: 46px;
+  font-size: clamp(24px, 4vw, 46px);
   font-weight: 600;
-  line-height: 60px;
+  line-height: 30px;
   color: #111;
 }
 h2 {
-  font-size: 32px;
+  font-size: clamp(20px, 4vw, 32px);
   font-weight: 500;
   line-height: 140%;
   color: #333;
@@ -61,17 +25,17 @@ h5 {
   font-weight: 600;
 }
 h3 {
-  font-size: 16px;
+  font-size: clamp(12px, 3vw, 16px);
   font-weight: 500;
   color: #333;
 }
 h4 {
-  font-size: 14px;
+  font-size: clamp(12px, 3vw, 14px);
   line-height: 120%;
   color: #999;
 }
 p {
-  font-size: 20px;
+  font-size: clamp(16px, 3vw, 20px);
   line-height: 140%;
   font-weight: 600;
   color: #111;

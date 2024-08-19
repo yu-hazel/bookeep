@@ -7,15 +7,14 @@
                 <h3>나의 책장</h3>
             </div>
             <div class="title">
-                <h1> <span class="userName">{{ userName }}</span>님,</h1>
+                <h1 style="line-height:60px;"> <span class="userName">{{ userName }}</span>님,</h1>
                 <div class="subTitle">
                     <div style="display: flex; align-items: center; padding-right: 6px;">
                         <h2 class="brandName">Bookeep</h2>
                         <h2>과 함께</h2>
                     </div>
-                    <h2>한 권의 책이 열어주는</h2>
-                    <h2>새로운 세상을 만나 보세요.
-                    </h2>
+                    <h2>한 권의 책이 열어주는&nbsp;</h2>
+                    <h2>새로운 세상을 만나 보세요.</h2>
                 </div>
             </div>
         </div>
@@ -45,26 +44,15 @@ onMounted(() => {
 });
 </script>
 
-<!-- <script>
-export default {
-    name: 'Home',
-    data() {
-        return {
-            userName : '유혜인',
-        }
-    }
-};
-</script> -->
-
 <style scoped>
 .userName {
     /* color: #A29CFE; */
     font-weight: 600;
-    font-size: 52px;
+    font-size: clamp(24px, 4vw, 52px);
 }
 .brandName {
     color: #A29CFE;
-    font-size: 36px;
+    font-size: calmp(22px, 4vw, 36px);
     font-weight: 600;
     letter-spacing: 0;
 }
@@ -92,11 +80,6 @@ export default {
     flex-wrap: wrap;
     align-items: center;
 }
-/* .BookShelf {
-    padding: 50px 20px 40px 20px;
-    border: 1px solid #DCDCE1;
-    border-radius: 30px;
-} */
 .contentBox {
     display: flex;
     flex-direction: column;

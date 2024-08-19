@@ -2,7 +2,7 @@
     <v-container style="padding: 0.5%; max-width: 2000px;">
         <v-row v-if="filteredBooks && filteredBooks.length"
             style="display: grid; grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));">
-            <v-col v-for="book in filteredBooks" :key="book.isbn" style="padding: 8px;">
+            <v-col v-for="book in filteredBooks" :key="book.isbn" style="padding: 8px;width: 95vw;">
                 <v-card @click="openBookDetail(book, props.category)" class="bookCard">
                     <v-card-text class="bookThumbnail">
                         <v-img :src="book.thumbnail" />
@@ -103,7 +103,6 @@ const formatDate = (datetime) => {
 
 <style scoped>
 .bookCard {
-
     box-shadow: none;
     display: flex;
     /* margin: 8px; */

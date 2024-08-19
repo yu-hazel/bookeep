@@ -3,10 +3,10 @@
         <div class="tabs">
             <v-tabs v-model="activeTab" show-arrows color="deep-purple-lighten-2" class="menuBox">
                 <v-tab v-for="(category, index) in categories" :key="index" class="menu">
-                    <h3>{{ category }}</h3>
+                    <h3 class="categoryName">{{ category }}</h3>
                 </v-tab>
             </v-tabs>
-            <h3>{{ activeCategoryBookCount }}권의 책 저장중</h3>
+            <h3 class="savedBookCount">{{ activeCategoryBookCount }}권의 책 저장중</h3>
         </div>
         <v-tabs-items v-model="activeTab">
             <v-tab-item>
@@ -60,6 +60,9 @@ watch(activeTab, () => {
     justify-content: space-between;
     align-items: center;
 }
+.categoryName {
+    font-size: 16px;
+}
 .myBook {
     padding: 0;
     max-width: 2000px;
@@ -73,5 +76,9 @@ watch(activeTab, () => {
 }
 :deep(.v-slide-group__content) {
     gap: 12px;
+}
+.savedBookCount {
+    font-size: clamp(12px, 3vw, 16px);
+    text-align: center;
 }
 </style>
