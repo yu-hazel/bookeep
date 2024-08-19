@@ -12,10 +12,10 @@
           <div class="title">
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; gap: 6px;">
-                <h1 style=" color: #a29cfe; letter-spacing: 0; font-size: 48px;">Bookeep</h1>
-                <h1>과 함께 </h1>
+                <h1 style=" color: #a29cfe; letter-spacing: 0; font-size: 48px; line-height:60px;">Bookeep</h1>
+                <h1 style="line-height: 60px;">과 함께 </h1>
               </div>
-              <h1>당신을 기다리는 16만권의 새로운 세상</h1>
+              <h1 style="line-height:60px;">당신을 기다리는 16만권의 새로운 세상</h1>
             </div>
             <div>
               <div class="subTitle">
